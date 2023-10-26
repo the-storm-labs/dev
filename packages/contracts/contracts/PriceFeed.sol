@@ -152,6 +152,9 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         
         prevChainlinkResponse.answer = int256(convertToBrl(uint256(prevChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.decimals)));
 
+        // BRL must be updated
+
+        if (_chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse)) return lastGoodPrice;
 
         // --- CASE 1: System fetched last price from Chainlink  ---
         
