@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.0;
 
-import "../Interfaces/ITellorCaller.sol";
-import "./ITellor.sol";
-import "./SafeMath.sol";
+import "usingtellor/contracts/UsingTellor.sol";
+
 /*
 * This contract has a single external function that calls Tellor: getTellorCurrentValue(). 
 *
@@ -15,39 +14,24 @@ import "./SafeMath.sol";
 * https://github.com/tellor-io/usingtellor/blob/master/contracts/UsingTellor.sol
 *
 */
-contract TellorCaller is ITellorCaller {
-    using SafeMath for uint256;
-
-    ITellor public tellor;
-
-    constructor (address _tellorMasterAddress) public {
-        tellor = ITellor(_tellorMasterAddress);
+contract TellorCaller is UsingTellor {
+       
+    constructor (address payable _tellorMasterAddress) UsingTellor(_tellorMasterAddress) {
+        
     }
 
-    /*
-    * getTellorCurrentValue(): identical to getCurrentValue() in UsingTellor.sol
-    *
-    * @dev Allows the user to get the latest value for the requestId specified
-    * @param _requestId is the requestId to look up the value for
-    * @return ifRetrieve bool true if it is able to retrieve a value, the value, and the value's timestamp
-    * @return value the value retrieved
-    * @return _timestampRetrieved the value's timestamp
-    */
-    function getTellorCurrentValue(uint256 _requestId)
-        external
-        view
-        override
-        returns (
-            bool ifRetrieve,
-            uint256 value,
-            uint256 _timestampRetrieved
-        )
-    {
-        uint256 _count = tellor.getNewValueCountbyRequestId(_requestId);
-        uint256 _time =
-            tellor.getTimestampbyRequestIDandIndex(_requestId, _count.sub(1));
-        uint256 _value = tellor.retrieveData(_requestId, _time);
-        if (_value > 0) return (true, _value, _time);
-        return (false, 0, _time);
+     function getTellorCurrentValue(uint256 _requestId) external view returns ( bool, uint256, uint256)    {      
+      require( _requestId ==1, "TellorCaller: pair not registered");
+
+      bytes memory _queryData = abi.encode("SpotPrice", abi.encode("eth", "usd"));
+      bytes32 _queryId = keccak256(_queryData);
+      
+      (bytes memory _value, uint256 _timestampRetrieved) = getDataBefore(_queryId, block.timestamp - 20 minutes);
+      if (_timestampRetrieved == 0) return (false, 0, _timestampRetrieved);
+      require(block.timestamp - _timestampRetrieved < 24 hours);
+      uint256 value = abi.decode(_value, (uint256));
+      if (value > 0) return (true, value, _timestampRetrieved); 
+      return (false, 0 , _timestampRetrieved) ;
+    
     }
 }

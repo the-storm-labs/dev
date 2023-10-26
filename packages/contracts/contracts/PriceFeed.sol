@@ -25,7 +25,8 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
 
     string constant public NAME = "PriceFeed";
 
-    AggregatorV3Interface public priceAggregator;  // Mainnet Chainlink aggregator
+    AggregatorV3Interface public BRLPriceAggregator; // Arbitrum Chainlink aggregator
+    AggregatorV3Interface public priceAggregator;  // Arbitrum Chainlink aggregator
     ITellorCaller public tellorCaller;  // Wrapper contract that calls the Tellor system
 
     // Core Liquity contracts
@@ -36,7 +37,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
 
     // Use to convert a price answer to an 18-digit precision uint
     uint constant public TARGET_DIGITS = 18;  
-    uint constant public TELLOR_DIGITS = 6;
+    uint constant public TELLOR_DIGITS = 18;
 
     // Maximum time period allowed since Chainlink's latest round data timestamp, beyond which Chainlink is considered frozen.
     uint constant public TIMEOUT = 14400;  // 4 hours: 60 * 60 * 4
@@ -86,7 +87,8 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     
     function setAddresses(
         address _priceAggregatorAddress,
-        address _tellorCallerAddress
+        address _tellorCallerAddress,
+        address _BRLPriceAggregatorAddress
     )
         external
         onlyOwner
@@ -95,14 +97,15 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         checkContract(_tellorCallerAddress);
        
         priceAggregator = AggregatorV3Interface(_priceAggregatorAddress);
+        BRLPriceAggregator = AggregatorV3Interface(_BRLPriceAggregatorAddress);
         tellorCaller = ITellorCaller(_tellorCallerAddress);
 
         // Explicitly set initial system status
         status = Status.chainlinkWorking;
 
         // Get an initial price from Chainlink to serve as first reference for lastGoodPrice
-        ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse();
-        ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(chainlinkResponse.roundId, chainlinkResponse.decimals);
+        ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse(priceAggregator);
+        ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(priceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);
         
         require(!_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) && !_chainlinkIsFrozen(chainlinkResponse), 
             "PriceFeed: Chainlink must be working and current");
@@ -128,11 +131,30 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     */
     function fetchPrice() external override returns (uint) {
         // Get current and previous price data from Chainlink, and current price data from Tellor
-        ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse();
-        ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(chainlinkResponse.roundId, chainlinkResponse.decimals);
+        ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse(priceAggregator);
+        ChainlinkResponse memory BRLChainlinkResponse = _getCurrentChainlinkResponse(BRLPriceAggregator);
+        ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(priceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);
+        ChainlinkResponse memory prevBRLChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, BRLChainlinkResponse.roundId, BRLChainlinkResponse.decimals);
         TellorResponse memory tellorResponse = _getCurrentTellorResponse();
+       
+        uint256 brlPrice = uint256(chainlinkResponse.answer).mul(10 ** uint256(BRLChainlinkResponse.decimals));        
+        brlPrice = brlPrice.div(uint256(BRLChainlinkResponse.answer));
+        chainlinkResponse.answer = int256(brlPrice);
+        
+        uint256 prevBrlPrice = uint256(prevChainlinkResponse.answer).mul(10 ** uint256(prevBRLChainlinkResponse.decimals));
+        prevBrlPrice = prevBrlPrice.div(uint256(prevBRLChainlinkResponse.answer));
+        prevChainlinkResponse.answer = int256(prevBrlPrice);
+
+
+        uint256 tellorBrlPrice = tellorResponse.value.mul(10 ** uint256(prevBRLChainlinkResponse.decimals));
+        tellorBrlPrice = tellorBrlPrice.div(uint256(prevBRLChainlinkResponse.answer));
+        tellorResponse.value = tellorBrlPrice;
+
+
 
         // --- CASE 1: System fetched last price from Chainlink  ---
+        
+        
         if (status == Status.chainlinkWorking) {
             // If Chainlink is broken, try Tellor
             if (_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse)) {
@@ -508,9 +530,9 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         }
     }
 
-    function _getCurrentChainlinkResponse() internal view returns (ChainlinkResponse memory chainlinkResponse) {
+    function _getCurrentChainlinkResponse(AggregatorV3Interface aggregator) internal view returns (ChainlinkResponse memory chainlinkResponse) {
         // First, try to get current decimal precision:
-        try priceAggregator.decimals() returns (uint8 decimals) {
+        try aggregator.decimals() returns (uint8 decimals) {
             // If call to Chainlink succeeds, record the current decimal precision
             chainlinkResponse.decimals = decimals;
         } catch {
@@ -519,7 +541,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         }
 
         // Secondly, try to get latest price data:
-        try priceAggregator.latestRoundData() returns
+        try aggregator.latestRoundData() returns
         (
             uint80 roundId,
             int256 answer,
@@ -540,14 +562,14 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         }
     }
 
-    function _getPrevChainlinkResponse(uint80 _currentRoundId, uint8 _currentDecimals) internal view returns (ChainlinkResponse memory prevChainlinkResponse) {
+    function _getPrevChainlinkResponse(AggregatorV3Interface aggregator, uint80 _currentRoundId, uint8 _currentDecimals) internal view returns (ChainlinkResponse memory prevChainlinkResponse) {
         /*
         * NOTE: Chainlink only offers a current decimals() value - there is no way to obtain the decimal precision used in a 
         * previous round.  We assume the decimals used in the previous round are the same as the current round.
         */
 
         // Try to get the price data from the previous round:
-        try priceAggregator.getRoundData(_currentRoundId - 1) returns 
+        try aggregator.getRoundData(_currentRoundId - 1) returns 
         (
             uint80 roundId,
             int256 answer,
