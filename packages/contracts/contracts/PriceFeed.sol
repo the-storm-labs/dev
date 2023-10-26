@@ -107,8 +107,16 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse(priceAggregator);
         ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(priceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);
         
-        require(!_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) && !_chainlinkIsFrozen(chainlinkResponse), 
+        ChainlinkResponse memory brlChainlinkResponse = _getCurrentChainlinkResponse(BRLPriceAggregator);
+        ChainlinkResponse memory prevBrlChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);                
+
+
+        require(!_chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse) && !_chainlinkIsFrozen( brlChainlinkResponse) && !_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) && !_chainlinkIsFrozen(chainlinkResponse), 
             "PriceFeed: Chainlink must be working and current");
+
+       
+        chainlinkResponse.answer = int256(convertToBrl(uint256(chainlinkResponse.answer),uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals)));       
+        prevChainlinkResponse.answer = int256(convertToBrl(uint256(prevChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.decimals)));
 
         _storeChainlinkPrice(chainlinkResponse);
 
@@ -130,26 +138,19 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     *
     */
     function fetchPrice() external override returns (uint) {
+
         // Get current and previous price data from Chainlink, and current price data from Tellor
         ChainlinkResponse memory chainlinkResponse = _getCurrentChainlinkResponse(priceAggregator);
-        ChainlinkResponse memory BRLChainlinkResponse = _getCurrentChainlinkResponse(BRLPriceAggregator);
+        ChainlinkResponse memory brlChainlinkResponse = _getCurrentChainlinkResponse(BRLPriceAggregator);
         ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(priceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);
-        ChainlinkResponse memory prevBRLChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, BRLChainlinkResponse.roundId, BRLChainlinkResponse.decimals);
+        ChainlinkResponse memory prevBrlChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, brlChainlinkResponse.roundId, brlChainlinkResponse.decimals);
         TellorResponse memory tellorResponse = _getCurrentTellorResponse();
        
-        uint256 brlPrice = uint256(chainlinkResponse.answer).mul(10 ** uint256(BRLChainlinkResponse.decimals));        
-        brlPrice = brlPrice.div(uint256(BRLChainlinkResponse.answer));
-        chainlinkResponse.answer = int256(brlPrice);
+               
+        chainlinkResponse.answer = int256(convertToBrl(uint256(chainlinkResponse.answer),uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals)));       
+        tellorResponse.value = convertToBrl(tellorResponse.value,uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals));
         
-        uint256 prevBrlPrice = uint256(prevChainlinkResponse.answer).mul(10 ** uint256(prevBRLChainlinkResponse.decimals));
-        prevBrlPrice = prevBrlPrice.div(uint256(prevBRLChainlinkResponse.answer));
-        prevChainlinkResponse.answer = int256(prevBrlPrice);
-
-
-        uint256 tellorBrlPrice = tellorResponse.value.mul(10 ** uint256(prevBRLChainlinkResponse.decimals));
-        tellorBrlPrice = tellorBrlPrice.div(uint256(prevBRLChainlinkResponse.answer));
-        tellorResponse.value = tellorBrlPrice;
-
+        prevChainlinkResponse.answer = int256(convertToBrl(uint256(prevChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.decimals)));
 
 
         // --- CASE 1: System fetched last price from Chainlink  ---
@@ -589,6 +590,12 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
             // If call to Chainlink aggregator reverts, return a zero response with success = false
             return prevChainlinkResponse;
         }
+    }
+
+    function convertToBrl(uint256 _ETHprice, uint256 _brlUsd, uint256 brlDecimals) internal pure returns (uint256) {
+        uint256 brlPrice = _ETHprice.mul(10 ** brlDecimals);        
+        brlPrice = brlPrice.div(_brlUsd);
+        return brlPrice;
     }
 }
 
