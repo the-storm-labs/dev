@@ -596,7 +596,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     }
 
     function convertToBrl(uint256 _ETHprice, uint256 _brlUsd, uint256 brlDecimals) internal pure returns (uint256) {
-        uint256 brlPrice = _ETHprice.mul(10 ** brlDecimals);        
+        uint256 brlPrice = _ETHprice.mul(10 ** brlDecimals-1);        
         brlPrice = brlPrice.div(_brlUsd);
         return brlPrice;
     }
