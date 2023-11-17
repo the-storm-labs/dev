@@ -149,20 +149,14 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
        
                
         chainlinkResponse.answer = convertToBrl(chainlinkResponse.answer,brlChainlinkResponse.answer,brlChainlinkResponse.decimals);       
-        //tellorResponse.value = uint256(convertToBrl(int256(tellorResponse.value),brlChainlinkResponse.answer,brlChainlinkResponse.decimals));
-        
+        tellorResponse.value = convertTellorToBrl(tellorResponse.value, brlChainlinkResponse.answer, brlChainlinkResponse.decimals);
         prevChainlinkResponse.answer = convertToBrl(prevChainlinkResponse.answer,prevBrlChainlinkResponse.answer,prevBrlChainlinkResponse.decimals);
-
-        // BRL must be updated
-
-        if (_chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse)) return lastGoodPrice;
 
         // --- CASE 1: System fetched last price from Chainlink  ---
         
-        
         if (status == Status.chainlinkWorking) {
             // If Chainlink is broken, try Tellor
-            if (_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse)) {
+            if (_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) || _chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse)) {
                 // If Tellor is broken then both oracles are untrusted, so return the last good price
                 if (_tellorIsBroken(tellorResponse)) {
                     _changeStatus(Status.bothOraclesUntrusted);
@@ -183,7 +177,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
             }
 
             // If Chainlink is frozen, try Tellor
-            if (_chainlinkIsFrozen(chainlinkResponse)) {          
+            if (_chainlinkIsFrozen(chainlinkResponse) || _chainlinkIsFrozen(brlChainlinkResponse)) {          
                 // If Tellor is broken too, remember Tellor broke, and return last good price
                 if (_tellorIsBroken(tellorResponse)) {
                     _changeStatus(Status.usingChainlinkTellorUntrusted);
@@ -200,7 +194,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
             }
 
             // If Chainlink price has changed by > 50% between two consecutive rounds, compare it to Tellor's price
-            if (_chainlinkPriceChangeAboveMax(chainlinkResponse, prevChainlinkResponse)) {
+            if (_chainlinkPriceChangeAboveMax(chainlinkResponse, prevChainlinkResponse) || _chainlinkPriceChangeAboveMax(brlChainlinkResponse, prevBrlChainlinkResponse)) {
                 // If Tellor is broken, both oracles are untrusted, and return last good price
                  if (_tellorIsBroken(tellorResponse)) {
                     _changeStatus(Status.bothOraclesUntrusted);
@@ -597,8 +591,14 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     }
 
     function convertToBrl(int256 _ETHprice, int256 _brlUsd, uint8 brlDecimals) internal pure returns (int256) {
-        int256 brlPrice = _ETHprice * int256(10 ** uint256(brlDecimals));        
-        brlPrice = brlPrice / _brlUsd;
+        int256 _scaledETHprice = _ETHprice * int256(10 ** brlDecimals);        
+        int256 brlPrice = _scaledETHprice / _brlUsd;
+        return brlPrice;
+    }
+
+    function convertTellorToBrl(uint256 _ETHprice, int256 _brlUsd, uint8 brlDecimals) internal pure returns (uint256) {
+        uint256 _scaledETHprice = _ETHprice * (10 **  brlDecimals);
+        uint256 brlPrice = _scaledETHprice / uint256(_brlUsd);
         return brlPrice;
     }
 }
