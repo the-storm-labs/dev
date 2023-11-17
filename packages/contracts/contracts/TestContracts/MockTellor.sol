@@ -19,7 +19,7 @@ contract MockTellor {
         price = _price;
     }
 
-      function setDidRetrieve(bool _didRetrieve) external {
+    function setDidRetrieve(bool _didRetrieve) external {
         didRetrieve = _didRetrieve;
     }
 
@@ -46,6 +46,13 @@ contract MockTellor {
         return price;
     }
 
-
+    function getDataBefore(bytes32 _queryId, uint256 _timestamp) external view returns (bool, bytes memory, uint256) {
+        if (revertRequest) {require (1 == 0, "Tellor request reverted");}
+        if (didRetrieve) {
+            return (didRetrieve, abi.encode(price), updateTime);
+        } else {
+            return (didRetrieve, abi.encode(0), 0);
+        }
+    }
 
 }
