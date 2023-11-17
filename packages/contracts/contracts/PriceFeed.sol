@@ -94,6 +94,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         onlyOwner
     {
         checkContract(_priceAggregatorAddress);
+        checkContract(_BRLPriceAggregatorAddress);
         checkContract(_tellorCallerAddress);
        
         priceAggregator = AggregatorV3Interface(_priceAggregatorAddress);
@@ -115,8 +116,8 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
             "PriceFeed: Chainlink must be working and current");
 
        
-        chainlinkResponse.answer = int256(convertToBrl(uint256(chainlinkResponse.answer),uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals)));       
-        prevChainlinkResponse.answer = int256(convertToBrl(uint256(prevChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.decimals)));
+        chainlinkResponse.answer = int256(convertToBrl(chainlinkResponse.answer,brlChainlinkResponse.answer,brlChainlinkResponse.decimals));       
+        prevChainlinkResponse.answer = int256(convertToBrl(prevChainlinkResponse.answer,prevBrlChainlinkResponse.answer,prevBrlChainlinkResponse.decimals));
 
         _storeChainlinkPrice(chainlinkResponse);
 
@@ -147,10 +148,10 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         TellorResponse memory tellorResponse = _getCurrentTellorResponse();
        
                
-        chainlinkResponse.answer = int256(convertToBrl(uint256(chainlinkResponse.answer),uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals)));       
-        tellorResponse.value = convertToBrl(tellorResponse.value,uint256(brlChainlinkResponse.answer),uint256(brlChainlinkResponse.decimals));
+        chainlinkResponse.answer = convertToBrl(chainlinkResponse.answer,brlChainlinkResponse.answer,brlChainlinkResponse.decimals);       
+        //tellorResponse.value = uint256(convertToBrl(int256(tellorResponse.value),brlChainlinkResponse.answer,brlChainlinkResponse.decimals));
         
-        prevChainlinkResponse.answer = int256(convertToBrl(uint256(prevChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.answer),uint256(prevBrlChainlinkResponse.decimals)));
+        prevChainlinkResponse.answer = convertToBrl(prevChainlinkResponse.answer,prevBrlChainlinkResponse.answer,prevBrlChainlinkResponse.decimals);
 
         // BRL must be updated
 
@@ -595,9 +596,9 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         }
     }
 
-    function convertToBrl(uint256 _ETHprice, uint256 _brlUsd, uint256 brlDecimals) internal pure returns (uint256) {
-        uint256 brlPrice = _ETHprice.mul(10 ** brlDecimals-1);        
-        brlPrice = brlPrice.div(_brlUsd);
+    function convertToBrl(int256 _ETHprice, int256 _brlUsd, uint8 brlDecimals) internal pure returns (int256) {
+        int256 brlPrice = _ETHprice * int256(10 ** uint256(brlDecimals));        
+        brlPrice = brlPrice / _brlUsd;
         return brlPrice;
     }
 }
