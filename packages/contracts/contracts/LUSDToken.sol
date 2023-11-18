@@ -6,6 +6,7 @@ import "./Interfaces/ILUSDToken.sol";
 import "./Dependencies/SafeMath.sol";
 import "./Dependencies/CheckContract.sol";
 import "./Dependencies/console.sol";
+import "./Dependencies/Ownable.sol";
 /*
 *
 * Based upon OpenZeppelin's ERC20 contract:
@@ -24,7 +25,7 @@ import "./Dependencies/console.sol";
 * 2) sendToPool() and returnFromPool(): functions callable only Liquity core contracts, which move LUSD tokens between Liquity <-> user.
 */
 
-contract LUSDToken is CheckContract, ILUSDToken {
+contract LUSDToken is CheckContract, ILUSDToken, Ownable {
     using SafeMath for uint256;
     
     uint256 private _totalSupply;
@@ -35,7 +36,7 @@ contract LUSDToken is CheckContract, ILUSDToken {
     
     // --- Data for EIP2612 ---
     
-    // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+    // keccak256("Permit(address _owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
     bytes32 private constant _PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     // keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
     bytes32 private constant _TYPE_HASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
@@ -55,14 +56,14 @@ contract LUSDToken is CheckContract, ILUSDToken {
     mapping (address => mapping (address => uint256)) private _allowances;  
     
     // --- Addresses ---
-    address public immutable troveManagerAddress;
-    address public immutable stabilityPoolAddress;
-    address public immutable borrowerOperationsAddress;
+    mapping(address => bool) public isTroveManagerAddress;
+    mapping(address => bool) public isStabilityPoolAddress;
+    mapping(address => bool) public isBorrowerOperationsAddress;
     
     // --- Events ---
-    event TroveManagerAddressChanged(address _troveManagerAddress);
-    event StabilityPoolAddressChanged(address _newStabilityPoolAddress);
-    event BorrowerOperationsAddressChanged(address _newBorrowerOperationsAddress);
+    event TroveManagerAddressSet(address _troveManagerAddress, bool _isTroveManagerAddress);
+    event StabilityPoolAddressSet(address _stabilityPoolAddress, bool _isStabilityPoolAddress);
+    event BorrowerOperationsAddressSet(address _borrowerOperationsAddress, bool _isBorrowerOperationsAddress);
 
     constructor
     ( 
@@ -76,14 +77,14 @@ contract LUSDToken is CheckContract, ILUSDToken {
         checkContract(_stabilityPoolAddress);
         checkContract(_borrowerOperationsAddress);
 
-        troveManagerAddress = _troveManagerAddress;
-        emit TroveManagerAddressChanged(_troveManagerAddress);
+        isTroveManagerAddress[_troveManagerAddress] = true;
+        emit TroveManagerAddressSet(_troveManagerAddress, true);
 
-        stabilityPoolAddress = _stabilityPoolAddress;
-        emit StabilityPoolAddressChanged(_stabilityPoolAddress);
+        isStabilityPoolAddress[_stabilityPoolAddress] = true;
+        emit StabilityPoolAddressSet(_stabilityPoolAddress, true);
 
-        borrowerOperationsAddress = _borrowerOperationsAddress;        
-        emit BorrowerOperationsAddressChanged(_borrowerOperationsAddress);
+        isBorrowerOperationsAddress[_borrowerOperationsAddress] = true;        
+        emit BorrowerOperationsAddressSet(_borrowerOperationsAddress, true);
         
         bytes32 hashedName = keccak256(bytes(_NAME));
         bytes32 hashedVersion = keccak256(bytes(_VERSION));
@@ -132,8 +133,8 @@ contract LUSDToken is CheckContract, ILUSDToken {
         return true;
     }
 
-    function allowance(address owner, address spender) external view override returns (uint256) {
-        return _allowances[owner][spender];
+    function allowance(address _owner, address spender) external view override returns (uint256) {
+        return _allowances[_owner][spender];
     }
 
     function approve(address spender, uint256 amount) external override returns (bool) {
@@ -170,7 +171,7 @@ contract LUSDToken is CheckContract, ILUSDToken {
 
     function permit
     (
-        address owner, 
+        address _owner, 
         address spender, 
         uint amount, 
         uint deadline, 
@@ -184,15 +185,15 @@ contract LUSDToken is CheckContract, ILUSDToken {
         require(deadline >= now, 'LUSD: expired deadline');
         bytes32 digest = keccak256(abi.encodePacked('\x19\x01', 
                          domainSeparator(), keccak256(abi.encode(
-                         _PERMIT_TYPEHASH, owner, spender, amount, 
-                         _nonces[owner]++, deadline))));
+                         _PERMIT_TYPEHASH, _owner, spender, amount, 
+                         _nonces[_owner]++, deadline))));
         address recoveredAddress = ecrecover(digest, v, r, s);
-        require(recoveredAddress == owner, 'LUSD: invalid signature');
-        _approve(owner, spender, amount);
+        require(recoveredAddress == _owner, 'LUSD: invalid signature');
+        _approve(_owner, spender, amount);
     }
 
-    function nonces(address owner) external view override returns (uint256) { // FOR EIP 2612
-        return _nonces[owner];
+    function nonces(address _owner) external view override returns (uint256) { // FOR EIP 2612
+        return _nonces[_owner];
     }
 
     // --- Internal operations ---
@@ -235,12 +236,12 @@ contract LUSDToken is CheckContract, ILUSDToken {
         emit Transfer(account, address(0), amount);
     }
 
-    function _approve(address owner, address spender, uint256 amount) internal {
-        assert(owner != address(0));
+    function _approve(address _owner, address spender, uint256 amount) internal {
+        assert(_owner != address(0));
         assert(spender != address(0));
 
-        _allowances[owner][spender] = amount;
-        emit Approval(owner, spender, amount);
+        _allowances[_owner][spender] = amount;
+        emit Approval(_owner, spender, amount);
     }
 
     // --- 'require' functions ---
@@ -252,33 +253,33 @@ contract LUSDToken is CheckContract, ILUSDToken {
             "LUSD: Cannot transfer tokens directly to the LUSD token contract or the zero address"
         );
         require(
-            _recipient != stabilityPoolAddress && 
-            _recipient != troveManagerAddress && 
-            _recipient != borrowerOperationsAddress, 
+            !isStabilityPoolAddress[_recipient] && 
+            !isTroveManagerAddress[_recipient] && 
+            !isBorrowerOperationsAddress[_recipient], 
             "LUSD: Cannot transfer tokens directly to the StabilityPool, TroveManager or BorrowerOps"
         );
     }
 
     function _requireCallerIsBorrowerOperations() internal view {
-        require(msg.sender == borrowerOperationsAddress, "LUSDToken: Caller is not BorrowerOperations");
+        require(isBorrowerOperationsAddress[msg.sender], "LUSDToken: Caller is not BorrowerOperations");
     }
 
     function _requireCallerIsBOorTroveMorSP() internal view {
         require(
-            msg.sender == borrowerOperationsAddress ||
-            msg.sender == troveManagerAddress ||
-            msg.sender == stabilityPoolAddress,
+            isBorrowerOperationsAddress[msg.sender] ||
+            isTroveManagerAddress[msg.sender] ||
+            isStabilityPoolAddress[msg.sender],
             "LUSD: Caller is neither BorrowerOperations nor TroveManager nor StabilityPool"
         );
     }
 
     function _requireCallerIsStabilityPool() internal view {
-        require(msg.sender == stabilityPoolAddress, "LUSD: Caller is not the StabilityPool");
+        require(isStabilityPoolAddress[msg.sender], "LUSD: Caller is not the StabilityPool");
     }
 
     function _requireCallerIsTroveMorSP() internal view {
         require(
-            msg.sender == troveManagerAddress || msg.sender == stabilityPoolAddress,
+            isTroveManagerAddress[msg.sender] || isStabilityPoolAddress[msg.sender],
             "LUSD: Caller is neither TroveManager nor StabilityPool");
     }
 
@@ -302,5 +303,23 @@ contract LUSDToken is CheckContract, ILUSDToken {
 
     function permitTypeHash() external view override returns (bytes32) {
         return _PERMIT_TYPEHASH;
+    }
+
+    function setTroverManagerAddress(address _troveManagerAddress, bool _isTrusted) onlyOwner external {
+        checkContract(_troveManagerAddress);
+        isTroveManagerAddress[_troveManagerAddress] = _isTrusted;
+        emit TroveManagerAddressSet(_troveManagerAddress, _isTrusted);
+    }
+
+    function setStabilityPoolAddress(address _newStabilityPoolAddress, bool _isTrusted) onlyOwner external {
+        checkContract(_newStabilityPoolAddress);
+        isStabilityPoolAddress[_newStabilityPoolAddress] = _isTrusted;
+        emit StabilityPoolAddressSet(_newStabilityPoolAddress, _isTrusted);
+    }
+
+    function setBorrowerOperationsAddress(address _newBorrowerOperationsAddress, bool _isTrusted) onlyOwner external {
+        checkContract(_newBorrowerOperationsAddress);
+        isBorrowerOperationsAddress[_newBorrowerOperationsAddress] = _isTrusted;
+        emit BorrowerOperationsAddressSet(_newBorrowerOperationsAddress, _isTrusted);
     }
 }
