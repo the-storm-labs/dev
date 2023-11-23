@@ -11,8 +11,8 @@ import { ApprovePressedPayload, BLusdAmmTokenIndex } from "../../context/transit
 import { PoolDetails } from "./PoolDetails";
 
 const tokenSymbol = new Map([
-  [BLusdAmmTokenIndex.BLUSD, "bLUSD"],
-  [BLusdAmmTokenIndex.LUSD, "LUSD"]
+  [BLusdAmmTokenIndex.iBRL, "iBRL"],
+  [BLusdAmmTokenIndex.IBRL, "IBRL"]
 ]);
 
 const WithdrawnAmount: React.FC<{ symbol: string }> = ({ symbol, children }) => (
@@ -29,7 +29,7 @@ const checkOutput = (value: string): BLusdAmmTokenIndex | "both" => {
   }
 
   const i = parseInt(value);
-  if (i === BLusdAmmTokenIndex.BLUSD || i === BLusdAmmTokenIndex.LUSD) {
+  if (i === BLusdAmmTokenIndex.iBRL || i === BLusdAmmTokenIndex.IBRL) {
     return i;
   }
 
@@ -37,8 +37,8 @@ const checkOutput = (value: string): BLusdAmmTokenIndex | "both" => {
 };
 
 const zeros = new Map<BLusdAmmTokenIndex, Decimal>([
-  [BLusdAmmTokenIndex.BLUSD, Decimal.ZERO],
-  [BLusdAmmTokenIndex.LUSD, Decimal.ZERO]
+  [BLusdAmmTokenIndex.iBRL, Decimal.ZERO],
+  [BLusdAmmTokenIndex.IBRL, Decimal.ZERO]
 ]);
 
 export const WithdrawPane: React.FC = () => {
@@ -61,7 +61,7 @@ export const WithdrawPane: React.FC = () => {
   const coalescedLpTokenBalance = lpTokenBalance ?? Decimal.ZERO;
   const isManageLiquidityPending = statuses.MANAGE_LIQUIDITY === "PENDING";
   const isBalanceInsufficient = burnLpTokens.gt(coalescedLpTokenBalance);
-  const needsApproval = output !== BLusdAmmTokenIndex.BLUSD && !isBLusdLpApprovedWithAmmZapper;
+  const needsApproval = output !== BLusdAmmTokenIndex.iBRL && !isBLusdLpApprovedWithAmmZapper;
 
   const handleApprovePressed = () => {
     const tokensNeedingApproval = new Map();
@@ -77,8 +77,8 @@ export const WithdrawPane: React.FC = () => {
   const handleConfirmPressed = () => {
     const curveSlippage = 0.001; // Allow mininum of %0.1% slippage due to Curve rounding issues
     if (output === "both") {
-      const minBLusdAmount = withdrawal.get(BLusdAmmTokenIndex.BLUSD)?.mul(1 - curveSlippage);
-      const minLusdAmount = withdrawal.get(BLusdAmmTokenIndex.LUSD)?.mul(1 - curveSlippage);
+      const minBLusdAmount = withdrawal.get(BLusdAmmTokenIndex.iBRL)?.mul(1 - curveSlippage);
+      const minLusdAmount = withdrawal.get(BLusdAmmTokenIndex.IBRL)?.mul(1 - curveSlippage);
 
       if (minBLusdAmount === undefined || minBLusdAmount === Decimal.ZERO) return;
       if (minLusdAmount === undefined || minLusdAmount === Decimal.ZERO) return;

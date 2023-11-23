@@ -21,7 +21,7 @@ import { Decimal } from "@liquity/lib-base";
 import { useLiquity } from "../../../hooks/LiquityContext";
 import { api, _getProtocolInfo } from "./api";
 import { useTransaction } from "../../../hooks/useTransaction";
-import type { ERC20Faucet } from "@liquity/chicken-bonds/lusd/types";
+import type { ERC20Faucet } from "@liquity/chicken-bonds/LUSD/types";
 import { useBondContracts } from "./useBondContracts";
 import { useChainId } from "wagmi";
 import { useBondAddresses } from "./BondAddressesContext";
@@ -60,8 +60,8 @@ export const BondViewProvider: React.FC = props => {
   const [isBLusdLpApprovedWithAmmZapper, setIsBLusdLpApprovedWithAmmZapper] = useState(false);
   const [isBLusdLpApprovedWithGauge, setIsBLusdLpApprovedWithGauge] = useState(false);
   const [isSynchronizing, setIsSynchronizing] = useState(false);
-  const [inputToken, setInputToken] = useState<BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD>(
-    BLusdAmmTokenIndex.BLUSD
+  const [inputToken, setInputToken] = useState<BLusdAmmTokenIndex.iBRL | BLusdAmmTokenIndex.IBRL>(
+    BLusdAmmTokenIndex.iBRL
   );
   const [statuses, setStatuses] = useState<BondTransactionStatuses>({
     APPROVE: "IDLE",
@@ -361,7 +361,7 @@ export const BondViewProvider: React.FC = props => {
   const [approveAmm, approveAmmStatus] = useTransaction(
     async (tokensNeedingApproval: BLusdAmmTokenIndex[]) => {
       for (const token of tokensNeedingApproval) {
-        if (token === BLusdAmmTokenIndex.BLUSD) {
+        if (token === BLusdAmmTokenIndex.iBRL) {
           await (isMainnet
             ? api.approveTokenWithBLusdAmmMainnet(contracts.bLusdToken, liquity.connection.signer)
             : api.approveTokenWithBLusdAmm(
@@ -397,14 +397,14 @@ export const BondViewProvider: React.FC = props => {
     async ({ tokensNeedingApproval }: ApprovePressedPayload) => {
       if (contracts.bLusdAmm === undefined) return;
       for (const [token, spender] of Array.from(tokensNeedingApproval)) {
-        if (token === BLusdAmmTokenIndex.BLUSD) {
+        if (token === BLusdAmmTokenIndex.iBRL) {
           await api.approveToken(contracts.bLusdToken, spender, liquity.connection.signer);
           if (spender === BLUSD_AMM_ADDRESS) {
             setIsBLusdApprovedWithBlusdAmm(true);
           } else if (spender === BLUSD_LP_ZAP_ADDRESS) {
             setIsBLusdApprovedWithAmmZapper(true);
           }
-        } else if (token === BLusdAmmTokenIndex.LUSD) {
+        } else if (token === BLusdAmmTokenIndex.IBRL) {
           await api.approveToken(
             contracts.lusdToken,
             BLUSD_LP_ZAP_ADDRESS,
@@ -580,8 +580,8 @@ export const BondViewProvider: React.FC = props => {
     ): Promise<Map<BLusdAmmTokenIndex, Decimal>> => {
       if (contracts.bLusdAmm === undefined)
         return new Map([
-          [BLusdAmmTokenIndex.LUSD, Decimal.ZERO],
-          [BLusdAmmTokenIndex.BLUSD, Decimal.ZERO]
+          [BLusdAmmTokenIndex.IBRL, Decimal.ZERO],
+          [BLusdAmmTokenIndex.iBRL, Decimal.ZERO]
         ]);
 
       return contracts.bLusdAmmZapper
@@ -755,7 +755,7 @@ export const BondViewProvider: React.FC = props => {
     isBLusdLpApprovedWithGauge,
     inputToken,
     isInputTokenApprovedWithBLusdAmm:
-      inputToken === BLusdAmmTokenIndex.BLUSD
+      inputToken === BLusdAmmTokenIndex.iBRL
         ? isBLusdApprovedWithBlusdAmm
         : isLusdApprovedWithBlusdAmm,
     getExpectedSwapOutput,

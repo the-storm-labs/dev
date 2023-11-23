@@ -62,7 +62,7 @@ export const ActiveDeposit: React.FC = () => {
         <Box>
           <DisabledEditableRow
             label="Deposit"
-            inputId="deposit-lusd"
+            inputId="deposit-IBRL"
             amount={stabilityDeposit.currentLUSD.prettify()}
             unit={COIN}
           />

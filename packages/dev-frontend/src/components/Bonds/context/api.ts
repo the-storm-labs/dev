@@ -14,11 +14,11 @@ import type {
   BondNFT,
   ChickenBondManager,
   BLUSDLPZap
-} from "@liquity/chicken-bonds/lusd/types";
+} from "@liquity/chicken-bonds/LUSD/types";
 import {
   CurveCryptoSwap2ETH,
   CurveRegistrySwaps__factory
-} from "@liquity/chicken-bonds/lusd/types/external";
+} from "@liquity/chicken-bonds/LUSD/types/external";
 import type {
   BondCreatedEventObject,
   BondCreatedEvent,
@@ -26,7 +26,7 @@ import type {
   BondCancelledEvent,
   BondClaimedEventObject,
   BondClaimedEvent
-} from "@liquity/chicken-bonds/lusd/types/ChickenBondManager";
+} from "@liquity/chicken-bonds/LUSD/types/ChickenBondManager";
 import { Decimal } from "@liquity/lib-base";
 import type { LUSDToken } from "@liquity/lib-ethers/dist/types";
 import type { ProtocolInfo, Bond, BondStatus, Stats, Maybe, BLusdLpRewards } from "./transitions";
@@ -51,15 +51,15 @@ import { BLusdAmmTokenIndex } from "./transitions";
 import {
   TokenExchangeEvent,
   TokenExchangeEventObject
-} from "@liquity/chicken-bonds/lusd/types/external/CurveCryptoSwap2ETH";
-import mainnet from "@liquity/chicken-bonds/lusd/addresses/mainnet.json";
+} from "@liquity/chicken-bonds/LUSD/types/external/CurveCryptoSwap2ETH";
+import mainnet from "@liquity/chicken-bonds/LUSD/addresses/mainnet.json";
 import type {
   CurveLiquidityGaugeV5,
   DepositEvent,
   DepositEventObject,
   WithdrawEvent,
   WithdrawEventObject
-} from "@liquity/chicken-bonds/lusd/types/external/CurveLiquidityGaugeV5";
+} from "@liquity/chicken-bonds/LUSD/types/external/CurveLiquidityGaugeV5";
 
 const BOND_STATUS: BondStatus[] = ["NON_EXISTENT", "PENDING", "CANCELLED", "CLAIMED"];
 
@@ -70,7 +70,7 @@ const BLUSD_LUSD_3CRV_POOL_ADDRESS = "0x74ED5d42203806c8CDCf2F04Ca5F60DC777b901c
 const CRV_TOKEN_ADDRESS = "0xD533a949740bb3306d119CC777fa900bA034cd52";
 
 const TOKEN_ADDRESS_NAME_MAP: Record<string, string> = {
-  [LUSD_TOKEN_ADDRESS]: "LUSD",
+  [LUSD_TOKEN_ADDRESS]: "IBRL",
   [CRV_TOKEN_ADDRESS]: "CRV"
 };
 
@@ -88,7 +88,7 @@ const LQTY_ISSUANCE_GAS_HEADROOM = BigNumber.from(50000);
 const bLusdToLusdRoute: [string, string, string, string, string] = [
   mainnet.BLUSD_TOKEN_ADDRESS ?? "",
   mainnet.BLUSD_AMM_ADDRESS ?? "",
-  LUSD_3CRV_POOL_ADDRESS, // LP token of LUSD-3Crv-f has same address as pool
+  LUSD_3CRV_POOL_ADDRESS, // LP token of IBRL-3Crv-f has same address as pool
   LUSD_3CRV_POOL_ADDRESS,
   LUSD_TOKEN_ADDRESS
 ];
@@ -101,7 +101,7 @@ type RouteSwaps = [RouteSwapParams, RouteSwapParams, RouteSwapParams, RouteSwapP
 
 const getRoute = (inputToken: BLusdAmmTokenIndex): [RouteAddresses, RouteSwaps] => [
   [
-    ...(inputToken === BLusdAmmTokenIndex.BLUSD ? bLusdToLusdRoute : lusdToBLusdRoute),
+    ...(inputToken === BLusdAmmTokenIndex.iBRL ? bLusdToLusdRoute : lusdToBLusdRoute),
     constants.AddressZero,
     constants.AddressZero,
     constants.AddressZero,
@@ -119,13 +119,13 @@ const getRoute = (inputToken: BLusdAmmTokenIndex): [RouteAddresses, RouteSwaps] 
     // 9 = remove_liquidity_one_coin()
     //
     // Indices:
-    // - bLUSD pool: { 0: bLUSD, 1: LUSD-3Crv-f }
-    // - LUSD-3Crv-f pool: { 0: LUSD, 1: 3Crv }
+    // - iBRL pool: { 0: iBRL, 1: IBRL-3Crv-f }
+    // - IBRL-3Crv-f pool: { 0: IBRL, 1: 3Crv }
 
-    //                                          bLUSD        LUSD
-    inputToken === BLusdAmmTokenIndex.BLUSD ? [0, 1, 3] : [0, 0, 6], // step 1
-    inputToken === BLusdAmmTokenIndex.BLUSD ? [0, 0, 9] : [1, 0, 3], // step 2
-    [0, 0, 0], //                                LUSD       bLUSD
+    //                                          iBRL        IBRL
+    inputToken === BLusdAmmTokenIndex.iBRL ? [0, 1, 3] : [0, 0, 6], // step 1
+    inputToken === BLusdAmmTokenIndex.iBRL ? [0, 0, 9] : [1, 0, 3], // step 2
+    [0, 0, 0], //                                IBRL       iBRL
     [0, 0, 0]
   ]
 ];
@@ -338,7 +338,7 @@ const getAccountBonds = async (
 
         const marketValue = decimalify(bondAccrueds[idx]).mul(marketPrice);
 
-        // Accrued bLUSD is 0 for cancelled/claimed bonds
+        // Accrued iBRL is 0 for cancelled/claimed bonds
         const claimNowReturn = accrued.isZero ? 0 : getReturn(accrued, deposit, marketPrice);
         const rebondReturn = accrued.isZero ? 0 : getReturn(rebondAccrual, deposit, marketPrice);
         const rebondRoi = rebondReturn / toFloat(deposit);
@@ -425,14 +425,14 @@ const marginalInputAmount = Decimal.ONE.div(1000);
 const getBlusdAmmPrice = async (bLusdAmm: CurveCryptoSwap2ETH): Promise<Decimal> => {
   try {
     const marginalOutputAmount = await getExpectedSwapOutput(
-      BLusdAmmTokenIndex.BLUSD,
+      BLusdAmmTokenIndex.iBRL,
       marginalInputAmount,
       bLusdAmm
     );
 
     return marginalOutputAmount.div(marginalInputAmount);
   } catch (error: unknown) {
-    console.error("bLUSD AMM get_dy() price failed, probably has no liquidity?", error);
+    console.error("iBRL AMM get_dy() price failed, probably has no liquidity?", error);
   }
 
   return Decimal.ONE.div(decimalify(await bLusdAmm.price_oracle()));
@@ -441,7 +441,7 @@ const getBlusdAmmPrice = async (bLusdAmm: CurveCryptoSwap2ETH): Promise<Decimal>
 const getBlusdAmmPriceMainnet = async (bLusdAmm: CurveCryptoSwap2ETH): Promise<Decimal> => {
   try {
     const marginalOutputAmount = await getExpectedSwapOutputMainnet(
-      BLusdAmmTokenIndex.BLUSD,
+      BLusdAmmTokenIndex.iBRL,
       marginalInputAmount,
       bLusdAmm
     );
@@ -461,7 +461,7 @@ const getBlusdAmmPriceMainnet = async (bLusdAmm: CurveCryptoSwap2ETH): Promise<D
 
   const [oraclePrice, marginalOutputAmount] = await Promise.all([
     bLusdAmm.price_oracle().then(decimalify),
-    lusd3CrvPool.calc_withdraw_one_coin(marginalInputAmount.hex, 0 /* LUSD */).then(decimalify)
+    lusd3CrvPool.calc_withdraw_one_coin(marginalInputAmount.hex, 0 /* IBRL */).then(decimalify)
   ]);
 
   return marginalOutputAmount.div(marginalInputAmount).div(oraclePrice);
@@ -661,7 +661,7 @@ const isInfiniteBondApproved = async (
 ): Promise<boolean> => {
   const allowance = await lusdToken.allowance(account, chickenBondManager.address);
 
-  // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
+  // Unlike iBRL, IBRL doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
   return allowance.gt(constants.MaxInt256);
@@ -892,7 +892,7 @@ const isTokenApprovedWithBLusdAmm = async (
 
   const allowance = await token.allowance(account, bLusdAmmAddress);
 
-  // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
+  // Unlike iBRL, IBRL doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
   return allowance.gt(constants.MaxInt256);
@@ -904,7 +904,7 @@ const isTokenApprovedWithBLusdAmmMainnet = async (
 ): Promise<boolean> => {
   const allowance = await token.allowance(account, CURVE_REGISTRY_SWAPS_ADDRESS);
 
-  // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
+  // Unlike iBRL, IBRL doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
   return allowance.gt(constants.MaxInt256);
@@ -969,7 +969,7 @@ const approveTokenWithBLusdAmmMainnet = async (
 };
 
 const getOtherToken = (thisToken: BLusdAmmTokenIndex) =>
-  thisToken === BLusdAmmTokenIndex.BLUSD ? BLusdAmmTokenIndex.LUSD : BLusdAmmTokenIndex.BLUSD;
+  thisToken === BLusdAmmTokenIndex.iBRL ? BLusdAmmTokenIndex.IBRL : BLusdAmmTokenIndex.iBRL;
 
 const getExpectedSwapOutput = async (
   inputToken: BLusdAmmTokenIndex,
@@ -984,7 +984,7 @@ const getExpectedSwapOutputMainnet = async (
   bLusdAmm: CurveCryptoSwap2ETH
 ): Promise<Decimal> => {
   const bLusdAmmBalance = await bLusdAmm.balances(0);
-  // Initial Curve bLUSD price before liquidity = 1.29, reciprocal expected
+  // Initial Curve iBRL price before liquidity = 1.29, reciprocal expected
   const reciprocal = Decimal.from(1).div(1.29);
   if (bLusdAmmBalance.eq(0)) return inputAmount.div(reciprocal);
 
@@ -1088,7 +1088,7 @@ const getExpectedLpTokens = async (
   // Curve's calc_token_amount has rounding errors and they enforce a minimum 0.1% slippage
   let expectedLpTokenAmount = Decimal.ZERO;
   try {
-    // If the user is depositing bLUSD single sided, they won't have approved any.. WONT-FIX
+    // If the user is depositing iBRL single sided, they won't have approved any.. WONT-FIX
     expectedLpTokenAmount = await getExpectedLpTokensAmountViaZapper(
       bLusdAmount,
       lusdAmount,
@@ -1152,12 +1152,12 @@ const getExpectedWithdrawal = async (
     const [bLusdAmount, lusdAmount] = await bLusdZapper.getMinWithdrawBalanced(burnLp.hex);
 
     return new Map([
-      [BLusdAmmTokenIndex.BLUSD, decimalify(bLusdAmount)],
-      [BLusdAmmTokenIndex.LUSD, decimalify(lusdAmount)]
+      [BLusdAmmTokenIndex.iBRL, decimalify(bLusdAmount)],
+      [BLusdAmmTokenIndex.IBRL, decimalify(lusdAmount)]
     ]);
   } else {
     const withdrawEstimatorFunction =
-      output === BLusdAmmTokenIndex.LUSD
+      output === BLusdAmmTokenIndex.IBRL
         ? () => bLusdZapper.getMinWithdrawLUSD(burnLp.hex)
         : () => bLusdAmm.calc_withdraw_one_coin(burnLp.hex, 0);
     return new Map([[output, await withdrawEstimatorFunction().then(decimalify)]]);
@@ -1269,7 +1269,7 @@ const removeLiquidityOneCoin = async (
   signer: Signer | undefined,
   account: string
 ): Promise<void> => {
-  if (output === BLusdAmmTokenIndex.LUSD) {
+  if (output === BLusdAmmTokenIndex.IBRL) {
     return removeLiquidityLUSD(burnLpTokens, minAmount, bLusdZapper, signer, account);
   } else {
     return removeLiquidityBLUSD(burnLpTokens, minAmount, bLusdAmm, signer, account);

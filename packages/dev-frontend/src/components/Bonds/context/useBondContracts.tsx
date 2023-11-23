@@ -7,17 +7,17 @@ import {
   ChickenBondManager,
   ERC20Faucet,
   ERC20Faucet__factory
-} from "@liquity/chicken-bonds/lusd/types";
+} from "@liquity/chicken-bonds/LUSD/types";
 import {
   CurveCryptoSwap2ETH,
   CurveLiquidityGaugeV5__factory
-} from "@liquity/chicken-bonds/lusd/types/external";
-import { CurveCryptoSwap2ETH__factory } from "@liquity/chicken-bonds/lusd/types/external";
+} from "@liquity/chicken-bonds/LUSD/types/external";
+import { CurveCryptoSwap2ETH__factory } from "@liquity/chicken-bonds/LUSD/types/external";
 import {
   BLUSDToken__factory,
   BondNFT__factory,
   ChickenBondManager__factory
-} from "@liquity/chicken-bonds/lusd/types";
+} from "@liquity/chicken-bonds/LUSD/types";
 import type { LUSDToken } from "@liquity/lib-ethers/dist/types";
 import LUSDTokenAbi from "@liquity/lib-ethers/abi/LUSDToken.json";
 import { useContract } from "../../../hooks/useContract";
@@ -29,7 +29,7 @@ import { BLusdAmmTokenIndex } from "./transitions";
 import type { Addresses } from "./transitions";
 import { useChainId } from "wagmi";
 import { useBondAddresses } from "./BondAddressesContext";
-import type { CurveLiquidityGaugeV5 } from "@liquity/chicken-bonds/lusd/types/external/CurveLiquidityGaugeV5";
+import type { CurveLiquidityGaugeV5 } from "@liquity/chicken-bonds/LUSD/types/external/CurveLiquidityGaugeV5";
 
 type BondsInformation = {
   protocolInfo: ProtocolInfo;
@@ -189,8 +189,8 @@ export const useBondContracts = (): BondContracts => {
         lpTokenBalance,
         stakedLpTokenBalance,
         lpTokenSupply,
-        bLusdAmmBLusdBalance: bLusdAmmCoinBalances[BLusdAmmTokenIndex.BLUSD],
-        bLusdAmmLusdBalance: bLusdAmmCoinBalances[BLusdAmmTokenIndex.LUSD],
+        bLusdAmmBLusdBalance: bLusdAmmCoinBalances[BLusdAmmTokenIndex.iBRL],
+        bLusdAmmLusdBalance: bLusdAmmCoinBalances[BLusdAmmTokenIndex.IBRL],
         lpRewards
       };
     },
