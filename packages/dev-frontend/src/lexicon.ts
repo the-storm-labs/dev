@@ -64,5 +64,5 @@ export const TROVES: Lexicon = {
 
 export const LUSD_SUPPLY: Lexicon = {
   term: "IBRL supply",
-  description: "The total IBRL minted by the Liquity Protocol."
+  description: "The total IBRL minted by the Ibake Protocol."
 };
