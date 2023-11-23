@@ -1,25 +1,26 @@
 import { Theme, ThemeUIStyleObject } from "theme-ui";
 
 const baseColors = {
-  blue: "#1542cd",
+  blue: "#007eec",
   purple: "#745ddf",
   cyan: "#2eb6ea",
   green: "#28c081",
-  yellow: "#fd9d28",
+  yellow: "##ece400",
   red: "#dc2c10",
-  lightRed: "#ff755f"
+  lightRed: "#ff755f",
+  orange: "#EC6E00"
 };
 
 const colors = {
-  primary: baseColors.blue,
-  secondary: baseColors.purple,
-  accent: baseColors.cyan,
+  primary: baseColors.orange,
+  secondary: baseColors.blue,
+  accent: baseColors.yellow,
 
   success: baseColors.green,
   warning: baseColors.yellow,
   danger: baseColors.red,
   dangerHover: baseColors.lightRed,
-  info: baseColors.blue,
+  info: baseColors.orange,
   invalid: "pink",
 
   text: "#293147",
