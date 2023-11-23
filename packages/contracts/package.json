@@ -7,12 +7,12 @@
     "test": "test"
   },
   "scripts": {
-    "hardhat": "hardhat",
+    "hardhat": "npx hardhat",
     "prepare": "run-s 'prepare:*'",
     "prepare:compile": "hardhat compile",
     "prepare:set-version": "node scripts/set-version.js",
-    "test": "hardhat test",
-    "coverage": "hardhat coverage",
+    "test": "npx hardhat test",
+    "coverage": "npx hardhat coverage",
     "coveralls": "cat coverage/lcov.info | coveralls"
   },
   "keywords": [],
