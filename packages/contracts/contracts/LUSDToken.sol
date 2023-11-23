@@ -29,8 +29,8 @@ contract LUSDToken is CheckContract, ILUSDToken, Ownable {
     using SafeMath for uint256;
     
     uint256 private _totalSupply;
-    string constant internal _NAME = "LUSD Stablecoin";
-    string constant internal _SYMBOL = "LUSD";
+    string constant internal _NAME = "BRL Ibake Stablecoin";
+    string constant internal _SYMBOL = "IBRL";
     string constant internal _VERSION = "1";
     uint8 constant internal _DECIMALS = 18;
     
