@@ -26,6 +26,14 @@ const alchemyUrlRinkeby = () => {
     return `https://eth-rinkeby.alchemyapi.io/v2/${getSecret('alchemyAPIKeyRinkeby')}`
 }
 
+const alchemyArbitrumUrl = () => {
+    return `https://arb-mainnet.g.alchemy.com/v2/${getSecret('alchemyAPIKeyArbitrum')} `
+}
+
+const alchemyPolygonUrl = () => {
+    return `https://polygon.g.alchemy.com/v2/${getSecret('alchemyAPIKeyPolygon')}`
+}
+
 module.exports = {
     paths: {
         // contracts: "./contracts",
@@ -86,6 +94,18 @@ module.exports = {
                 getSecret('DEPLOYER_PRIVATEKEY', '0x60ddfe7f579ab6867cbe7a2dc03853dc141d7a4ab6dbefc0dae2d2b1bd4e487f'),
                 getSecret('ACCOUNT2_PRIVATEKEY', '0x3ec7cedbafd0cb9ec05bf9f7ccfa1e8b42b3e3a02c75addfccbfeb328d1b383b')
             ]
+        },
+        arbitrum: {
+            url: alchemyArbitrumUrl(),
+            gasPrice: process.env.GAS_PRICE ? parseInt(process.env.GAS_PRICE) : 20000000000,
+            accounts: [
+                getSecret('DEPLOYER_PRIVATEKEY', ''),
+            ]
+        },
+        polygon:{
+            url: alchemyPolygonUrl(),
+            gasPrice: process.env.GAS_PRICE ? parseInt(process.env.GAS_PRICE) : 20000000000,
+            accounts: [getSecret('DEPLOYER_PRIVATEKEY', '')]
         },
         rinkeby: {
             url: alchemyUrlRinkeby(),
