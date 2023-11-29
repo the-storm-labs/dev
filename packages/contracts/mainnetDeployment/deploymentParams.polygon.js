@@ -23,14 +23,14 @@ const beneficiaries = {
   ACCOUNT_1: "0xCB05449F5844ADe9ab3dc9c4516303AF9946fffd",  
 }
 
-const OUTPUT_FILE = './mumbaiDeployment/mumbaiDeploymentOutput.json'
+const OUTPUT_FILE = './mainnetDeployment/polygonDeploymentOutput.json'
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 const waitFunction = async () => {
   return delay(90000) // wait 90s
 }
 
-const GAS_PRICE = 25000000000 // 25 gwei
+const GAS_PRICE = 160000000000 // 160 Gwei
 const TX_CONFIRMATIONS = 3 // for mainnet
 
 const ETHERSCAN_BASE_URL = 'https://polygonscan.com/'

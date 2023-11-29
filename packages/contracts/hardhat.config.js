@@ -31,7 +31,7 @@ const alchemyArbitrumUrl = () => {
 }
 
 const alchemyPolygonUrl = () => {
-    return `https://polygon.g.alchemy.com/v2/${getSecret('alchemyAPIKeyPolygon')}`
+    return `https://polygon-mainnet.g.alchemy.com/v2/${getSecret('alchemyAPIKeyPolygon')}`
 }
 
 module.exports = {
@@ -104,7 +104,7 @@ module.exports = {
         },
         polygon:{
             url: alchemyPolygonUrl(),
-            gasPrice: process.env.GAS_PRICE ? parseInt(process.env.GAS_PRICE) : 20000000000,
+            gasPrice: 31302824047,
             accounts: [getSecret('DEPLOYER_PRIVATEKEY', '')]
         },
         rinkeby: {

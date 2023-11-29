@@ -221,11 +221,11 @@ class MainnetDeploymentHelper {
     return owner == ZERO_ADDRESS
   }
   // Connect contracts to their dependencies
-  async connectCoreContractsMainnet(contracts, LQTYContracts, chainlinkProxyAddress) {
+  async connectCoreContractsMainnet(contracts, LQTYContracts, chainlinkProxyAddress, chainlinkBrlProxyAddress) {
     const gasPrice = this.configParams.GAS_PRICE
     // Set ChainlinkAggregatorProxy and TellorCaller in the PriceFeed
     await this.isOwnershipRenounced(contracts.priceFeed) ||
-      await this.sendAndWaitForTransaction(contracts.priceFeed.setAddresses(chainlinkProxyAddress, contracts.tellorCaller.address, {gasPrice}))
+      await this.sendAndWaitForTransaction(contracts.priceFeed.setAddresses(chainlinkProxyAddress, contracts.tellorCaller.address, chainlinkBrlProxyAddress, {gasPrice}))
 
     // set TroveManager addr in SortedTroves
     await this.isOwnershipRenounced(contracts.sortedTroves) ||
@@ -350,6 +350,7 @@ class MainnetDeploymentHelper {
 
   // --- Verify on Ethrescan ---
   async verifyContract(name, deploymentState, constructorArguments=[]) {
+    console.log(`Verifying contract ${name}...`)
     if (!deploymentState[name] || !deploymentState[name].address) {
       console.error(`  --> No deployment state for contract ${name}!!`)
       return

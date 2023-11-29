@@ -41,6 +41,8 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
 
     // Maximum time period allowed since Chainlink's latest round data timestamp, beyond which Chainlink is considered frozen.
     uint constant public TIMEOUT = 14400;  // 4 hours: 60 * 60 * 4
+
+    uint constant public BRL_CHAINLINK_TIMEOUT = 57600; // 16 hours: 60 * 60 * 16
     
     // Maximum deviation allowed between two consecutive Chainlink oracle prices. 18-digit precision.
     uint constant public MAX_PRICE_DEVIATION_FROM_PREVIOUS_ROUND =  5e17; // 50%
@@ -109,10 +111,10 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         ChainlinkResponse memory prevChainlinkResponse = _getPrevChainlinkResponse(priceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);
         
         ChainlinkResponse memory brlChainlinkResponse = _getCurrentChainlinkResponse(BRLPriceAggregator);
-        ChainlinkResponse memory prevBrlChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, chainlinkResponse.roundId, chainlinkResponse.decimals);                
+        ChainlinkResponse memory prevBrlChainlinkResponse = _getPrevChainlinkResponse(BRLPriceAggregator, brlChainlinkResponse.roundId, brlChainlinkResponse.decimals);                
 
 
-        require(!_chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse) && !_chainlinkIsFrozen( brlChainlinkResponse) && !_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) && !_chainlinkIsFrozen(chainlinkResponse), 
+        require(!_chainlinkIsBroken(brlChainlinkResponse, prevBrlChainlinkResponse) && !_chainlinkBRLIsFrozen(brlChainlinkResponse) && !_chainlinkIsBroken(chainlinkResponse, prevChainlinkResponse) && !_chainlinkIsFrozen(chainlinkResponse), 
             "PriceFeed: Chainlink must be working and current");
 
        
@@ -177,7 +179,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
             }
 
             // If Chainlink is frozen, try Tellor
-            if (_chainlinkIsFrozen(chainlinkResponse) || _chainlinkIsFrozen(brlChainlinkResponse)) {          
+            if (_chainlinkIsFrozen(chainlinkResponse) || _chainlinkBRLIsFrozen(brlChainlinkResponse)) {          
                 // If Tellor is broken too, remember Tellor broke, and return last good price
                 if (_tellorIsBroken(tellorResponse)) {
                     _changeStatus(Status.usingChainlinkTellorUntrusted);
@@ -383,6 +385,10 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
 
     function _chainlinkIsFrozen(ChainlinkResponse memory _response) internal view returns (bool) {
         return block.timestamp.sub(_response.timestamp) > TIMEOUT;
+    }
+
+    function _chainlinkBRLIsFrozen(ChainlinkResponse memory _response) internal view returns (bool) {
+        return block.timestamp.sub(_response.timestamp) > BRL_CHAINLINK_TIMEOUT;
     }
 
     function _chainlinkPriceChangeAboveMax(ChainlinkResponse memory _currentResponse, ChainlinkResponse memory _prevResponse) internal pure returns (bool) {

@@ -30,7 +30,7 @@ contract TellorCaller is UsingTellor {
       
       (bytes memory _value, uint256 _timestampRetrieved) = getDataBefore(queryId[_requestId], block.timestamp - 20 minutes);
       if (_timestampRetrieved == 0) return (false, 0, _timestampRetrieved);
-      require(block.timestamp - _timestampRetrieved <= 5 hours);
+      require(block.timestamp - _timestampRetrieved <= 17 days, "Stale data"); // 17 days is the maximum delay for Tellor data
       uint256 value = abi.decode(_value, (uint256));
       if (value > 0) return (true, value, _timestampRetrieved); 
       return (false, 0 , _timestampRetrieved);

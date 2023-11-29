@@ -11,6 +11,7 @@ async function mainnetDeploy(configParams) {
   const date = new Date()
   console.log(date.toUTCString())
   const deployerWallet = (await ethers.getSigners())[0]
+  deployerWallet.gasPrice = configParams.GAS_PRICE
   // const account2Wallet = (await ethers.getSigners())[1]
   const mdh = new MainnetDeploymentHelper(configParams, deployerWallet)
   const gasPrice = configParams.GAS_PRICE
@@ -46,8 +47,11 @@ async function mainnetDeploy(configParams) {
   let WETHLUSDPairAddr = await uniswapV2Factory.getPair(configParams.externalAddrs.WETH_ERC20, liquityCore.lusdToken.address)
   assert.equal(LUSDWETHPairAddr, WETHLUSDPairAddr)
 
+  console.log(`LUSD-WETH pair contract address before Uniswap pair creation: ${LUSDWETHPairAddr}`)
+
 
   if (LUSDWETHPairAddr == th.ZERO_ADDRESS) {
+    console.log("Creating LUSD-WETH Uniswap pair...")
     // Deploy Unipool for LUSD-WETH
     await mdh.sendAndWaitForTransaction(uniswapV2Factory.createPair(
       configParams.externalAddrs.WETH_ERC20,
@@ -75,7 +79,7 @@ async function mainnetDeploy(configParams) {
   )
 
   // Connect all core contracts up
-  await mdh.connectCoreContractsMainnet(liquityCore, LQTYContracts, configParams.externalAddrs.CHAINLINK_ETHUSD_PROXY)
+  await mdh.connectCoreContractsMainnet(liquityCore, LQTYContracts, configParams.externalAddrs.CHAINLINK_ETHUSD_PROXY, configParams.externalAddrs.CHAINLINK_BRLUSD_PROXY)
   await mdh.connectLQTYContractsMainnet(LQTYContracts)
   await mdh.connectLQTYContractsToCoreMainnet(LQTYContracts, liquityCore)
 
@@ -128,6 +132,7 @@ async function mainnetDeploy(configParams) {
     }
 
     const lqtyTokenAddr = LQTYContracts.lqtyToken.address
+
     // verify
     if (configParams.ETHERSCAN_BASE_URL) {
       await mdh.verifyContract(investor, deploymentState, [lqtyTokenAddr, investorAddr, oneYearFromDeployment])
