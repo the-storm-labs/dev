@@ -596,13 +596,15 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         }
     }
 
-    function convertToBrl(int256 _ETHprice, int256 _brlUsd, uint8 brlDecimals) internal pure returns (int256) {
-        int256 _scaledETHprice = _ETHprice * int256(10 ** brlDecimals);        
+    function convertToBrl(int256 _ETHprice, int256 _brlUsd, uint256 brlDecimals) internal pure returns (int256) {
+        int256 _scaledETHprice = _ETHprice * int256(10 ** brlDecimals);      
+        // 203185640000 * (10 ** 8) = 20318564000000000000  
         int256 brlPrice = _scaledETHprice / _brlUsd;
+        // 20318564000000000000 / 20507083 = 991000000000000000
         return brlPrice;
     }
 
-    function convertTellorToBrl(uint256 _ETHprice, int256 _brlUsd, uint8 brlDecimals) internal pure returns (uint256) {
+    function convertTellorToBrl(uint256 _ETHprice, int256 _brlUsd, uint256 brlDecimals) internal pure returns (uint256) {
         uint256 _scaledETHprice = _ETHprice * (10 **  brlDecimals);
         uint256 brlPrice = _scaledETHprice / uint256(_brlUsd);
         return brlPrice;

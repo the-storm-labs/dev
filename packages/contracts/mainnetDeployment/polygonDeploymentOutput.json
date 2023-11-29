@@ -1,9 +1,4 @@
 {
-  "priceFeed": {
-    "address": "0x8Ca51fD01230FeB5E190Ddc13c92E04fA14DAe23",
-    "txHash": "0x28c134a513e92b361c39ed1364827a209c101541c69158c3cf2a0261f87b63e2",
-    "verification": "https://polygonscan.com//0x8Ca51fD01230FeB5E190Ddc13c92E04fA14DAe23#code"
-  },
   "sortedTroves": {
     "address": "0xfF152134103A4ae2AB8e7750ca918da706b62343",
     "txHash": "0xe4f5cff0b1f2ad3aa72025b2ff0b4bc6eb2fdce86f09483d361a259344a67689",
@@ -93,5 +88,10 @@
     "address": "0x19bc93d2F8e2f4FCAec48eCCbfec1331Af9a34d0",
     "txHash": "0x24fe5cf3c0b9d34ac8e04804d74ff626312de856930f96a609607d73c1e5a24e",
     "verification": "https://polygonscan.com//0x19bc93d2F8e2f4FCAec48eCCbfec1331Af9a34d0#code"
+  },
+  "priceFeed": {
+    "address": "0xbfEE88dB0F6D610F96BBA1c85bb37D8e3530deB8",
+    "txHash": "0xfd277a1e52f4e38aeb5fbc3ea2fece83b6b24fc74e863ac7c48c4e9719d93b8d",
+    "verification": "https://polygonscan.com//0xbfEE88dB0F6D610F96BBA1c85bb37D8e3530deB8#code"
   }
 }
