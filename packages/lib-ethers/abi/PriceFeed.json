@@ -46,6 +46,32 @@
   },
   {
     "inputs": [],
+    "name": "BRLPriceAggregator",
+    "outputs": [
+      {
+        "internalType": "contract AggregatorV3Interface",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "BRL_CHAINLINK_TIMEOUT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "DECIMAL_PRECISION",
     "outputs": [
       {
@@ -223,6 +249,11 @@
       {
         "internalType": "address",
         "name": "_tellorCallerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_BRLPriceAggregatorAddress",
         "type": "address"
       }
     ],

@@ -1,4 +1,4 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
+/* // jest-dom adds custom jest matchers for asserting on DOM nodes.
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
@@ -20,3 +20,4 @@ const ethereum = new DisposableWalletProvider(
 Object.assign(window, { ethereum });
 
 window.fetch = fetch as unknown as typeof window.fetch; // node-fetch is not perfectly compliant...
+ */

@@ -376,18 +376,20 @@ export interface LockupContractFactory
 }
 
 interface LUSDTokenCalls {
-  allowance(owner: string, spender: string, _overrides?: CallOverrides): Promise<BigNumber>;
+  allowance(_owner: string, spender: string, _overrides?: CallOverrides): Promise<BigNumber>;
   balanceOf(account: string, _overrides?: CallOverrides): Promise<BigNumber>;
-  borrowerOperationsAddress(_overrides?: CallOverrides): Promise<string>;
   decimals(_overrides?: CallOverrides): Promise<number>;
   domainSeparator(_overrides?: CallOverrides): Promise<string>;
+  isBorrowerOperationsAddress(arg0: string, _overrides?: CallOverrides): Promise<boolean>;
+  isOwner(_overrides?: CallOverrides): Promise<boolean>;
+  isStabilityPoolAddress(arg0: string, _overrides?: CallOverrides): Promise<boolean>;
+  isTroveManagerAddress(arg0: string, _overrides?: CallOverrides): Promise<boolean>;
   name(_overrides?: CallOverrides): Promise<string>;
-  nonces(owner: string, _overrides?: CallOverrides): Promise<BigNumber>;
+  nonces(_owner: string, _overrides?: CallOverrides): Promise<BigNumber>;
+  owner(_overrides?: CallOverrides): Promise<string>;
   permitTypeHash(_overrides?: CallOverrides): Promise<string>;
-  stabilityPoolAddress(_overrides?: CallOverrides): Promise<string>;
   symbol(_overrides?: CallOverrides): Promise<string>;
   totalSupply(_overrides?: CallOverrides): Promise<BigNumber>;
-  troveManagerAddress(_overrides?: CallOverrides): Promise<string>;
   version(_overrides?: CallOverrides): Promise<string>;
 }
 
@@ -397,9 +399,12 @@ interface LUSDTokenTransactions {
   decreaseAllowance(spender: string, subtractedValue: BigNumberish, _overrides?: Overrides): Promise<boolean>;
   increaseAllowance(spender: string, addedValue: BigNumberish, _overrides?: Overrides): Promise<boolean>;
   mint(_account: string, _amount: BigNumberish, _overrides?: Overrides): Promise<void>;
-  permit(owner: string, spender: string, amount: BigNumberish, deadline: BigNumberish, v: BigNumberish, r: BytesLike, s: BytesLike, _overrides?: Overrides): Promise<void>;
+  permit(_owner: string, spender: string, amount: BigNumberish, deadline: BigNumberish, v: BigNumberish, r: BytesLike, s: BytesLike, _overrides?: Overrides): Promise<void>;
   returnFromPool(_poolAddress: string, _receiver: string, _amount: BigNumberish, _overrides?: Overrides): Promise<void>;
   sendToPool(_sender: string, _poolAddress: string, _amount: BigNumberish, _overrides?: Overrides): Promise<void>;
+  setBorrowerOperationsAddress(_newBorrowerOperationsAddress: string, _isTrusted: boolean, _overrides?: Overrides): Promise<void>;
+  setStabilityPoolAddress(_newStabilityPoolAddress: string, _isTrusted: boolean, _overrides?: Overrides): Promise<void>;
+  setTroverManagerAddress(_troveManagerAddress: string, _isTrusted: boolean, _overrides?: Overrides): Promise<void>;
   transfer(recipient: string, amount: BigNumberish, _overrides?: Overrides): Promise<boolean>;
   transferFrom(sender: string, recipient: string, amount: BigNumberish, _overrides?: Overrides): Promise<boolean>;
 }
@@ -409,17 +414,25 @@ export interface LUSDToken
   readonly filters: {
     Approval(owner?: string | null, spender?: string | null, value?: null): EventFilter;
     BorrowerOperationsAddressChanged(_newBorrowerOperationsAddress?: null): EventFilter;
+    BorrowerOperationsAddressSet(_borrowerOperationsAddress?: null, _isBorrowerOperationsAddress?: null): EventFilter;
     LUSDTokenBalanceUpdated(_user?: null, _amount?: null): EventFilter;
+    OwnershipTransferred(previousOwner?: string | null, newOwner?: string | null): EventFilter;
     StabilityPoolAddressChanged(_newStabilityPoolAddress?: null): EventFilter;
+    StabilityPoolAddressSet(_stabilityPoolAddress?: null, _isStabilityPoolAddress?: null): EventFilter;
     Transfer(from?: string | null, to?: string | null, value?: null): EventFilter;
     TroveManagerAddressChanged(_troveManagerAddress?: null): EventFilter;
+    TroveManagerAddressSet(_troveManagerAddress?: null, _isTroveManagerAddress?: null): EventFilter;
   };
   extractEvents(logs: Log[], name: "Approval"): _TypedLogDescription<{ owner: string; spender: string; value: BigNumber }>[];
   extractEvents(logs: Log[], name: "BorrowerOperationsAddressChanged"): _TypedLogDescription<{ _newBorrowerOperationsAddress: string }>[];
+  extractEvents(logs: Log[], name: "BorrowerOperationsAddressSet"): _TypedLogDescription<{ _borrowerOperationsAddress: string; _isBorrowerOperationsAddress: boolean }>[];
   extractEvents(logs: Log[], name: "LUSDTokenBalanceUpdated"): _TypedLogDescription<{ _user: string; _amount: BigNumber }>[];
+  extractEvents(logs: Log[], name: "OwnershipTransferred"): _TypedLogDescription<{ previousOwner: string; newOwner: string }>[];
   extractEvents(logs: Log[], name: "StabilityPoolAddressChanged"): _TypedLogDescription<{ _newStabilityPoolAddress: string }>[];
+  extractEvents(logs: Log[], name: "StabilityPoolAddressSet"): _TypedLogDescription<{ _stabilityPoolAddress: string; _isStabilityPoolAddress: boolean }>[];
   extractEvents(logs: Log[], name: "Transfer"): _TypedLogDescription<{ from: string; to: string; value: BigNumber }>[];
   extractEvents(logs: Log[], name: "TroveManagerAddressChanged"): _TypedLogDescription<{ _troveManagerAddress: string }>[];
+  extractEvents(logs: Log[], name: "TroveManagerAddressSet"): _TypedLogDescription<{ _troveManagerAddress: string; _isTroveManagerAddress: boolean }>[];
 }
 
 interface LQTYStakingCalls {
@@ -543,6 +556,8 @@ export interface MultiTroveGetter
 }
 
 interface PriceFeedCalls {
+  BRLPriceAggregator(_overrides?: CallOverrides): Promise<string>;
+  BRL_CHAINLINK_TIMEOUT(_overrides?: CallOverrides): Promise<BigNumber>;
   DECIMAL_PRECISION(_overrides?: CallOverrides): Promise<BigNumber>;
   ETHUSD_TELLOR_REQ_ID(_overrides?: CallOverrides): Promise<BigNumber>;
   MAX_PRICE_DEVIATION_FROM_PREVIOUS_ROUND(_overrides?: CallOverrides): Promise<BigNumber>;
@@ -561,7 +576,7 @@ interface PriceFeedCalls {
 
 interface PriceFeedTransactions {
   fetchPrice(_overrides?: Overrides): Promise<BigNumber>;
-  setAddresses(_priceAggregatorAddress: string, _tellorCallerAddress: string, _overrides?: Overrides): Promise<void>;
+  setAddresses(_priceAggregatorAddress: string, _tellorCallerAddress: string, _BRLPriceAggregatorAddress: string, _overrides?: Overrides): Promise<void>;
 }
 
 export interface PriceFeed

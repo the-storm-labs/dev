@@ -251,6 +251,7 @@ export const _connectToContracts = (
   { addresses, _priceFeedIsTestnet, _uniTokenIsMock }: _LiquityDeploymentJSON
 ): _LiquityContracts => {
   const abi = getAbi(_priceFeedIsTestnet, _uniTokenIsMock);
+  console.log("abi", abi);
 
   return mapLiquityContracts(
     addresses,

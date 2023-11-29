@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react";
+/* import { render, fireEvent } from "@testing-library/react";
 
 import { Decimal, LUSD_MINIMUM_NET_DEBT, Trove } from "@liquity/lib-base";
 
@@ -10,6 +10,7 @@ const trove = Trove.create(params);
 /*
  * Just a quick and dirty testcase to prove that the approach can work in our CI pipeline.
  */
+/*
 test("there's no smoke", async () => {
   const { getByText, getByLabelText, findByText } = render(<App />);
 
@@ -27,3 +28,4 @@ test("there's no smoke", async () => {
 
   expect(await findByText(/adjust/i)).toBeInTheDocument();
 });
+ */

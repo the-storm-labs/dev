@@ -43,7 +43,10 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   const connection = useMemo(() => {
     if (config && provider && signer.data && account.address) {
       const batchedProvider = new BatchedProvider(provider, chainId);
-      // batchedProvider._debugLog = true;
+      batchedProvider._debugLog = true;
+      console.log("Connecting to chainId", chainId);
+      console.log("Connecting to provider", provider);
+      console.log("batchedProvider", batchedProvider);
 
       try {
         return _connectByChainId(batchedProvider, signer.data, chainId, {

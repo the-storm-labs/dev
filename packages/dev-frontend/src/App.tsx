@@ -1,6 +1,6 @@
 import React from "react";
 import { createClient, WagmiConfig } from "wagmi";
-import { mainnet, goerli, localhost } from "wagmi/chains";
+import { goerli, localhost, polygon } from "wagmi/chains";
 import { ConnectKitProvider, getDefaultClient } from "connectkit";
 import { Flex, Heading, ThemeProvider, Paragraph, Link } from "theme-ui";
 
@@ -49,7 +49,7 @@ const UnsupportedMainnetFallback: React.FC = () => (
       <Icon name="exclamation-triangle" /> This app is for testing purposes only.
     </Heading>
 
-    <Paragraph sx={{ mb: 3 }}>Please change your network to Görli.</Paragraph>
+    <Paragraph sx={{ mb: 3 }}>Please change your network to Polygon.</Paragraph>
 
     <Paragraph>
       If you'd like to use the Ibake Protocol on mainnet, please pick a frontend{" "}
@@ -74,7 +74,7 @@ const UnsupportedNetworkFallback: React.FC = () => (
     <Heading sx={{ mb: 3 }}>
       <Icon name="exclamation-triangle" /> Liquity is not supported on this network.
     </Heading>
-    Please switch to mainnet or Görli.
+    Please switch to Polygon or Mainnet.
   </Flex>
 );
 
@@ -94,10 +94,8 @@ const App = () => {
                   ? [localhost]
                   : config.value.testnetOnly
                   ? [goerli]
-                  : [mainnet, goerli],
+                  : [polygon],
               walletConnectProjectId: config.value.walletConnectProjectId,
-              infuraId: config.value.infuraApiKey,
-              alchemyId: config.value.alchemyApiKey
             })
           )}
         >
