@@ -30,7 +30,7 @@ const waitFunction = async () => {
   return delay(90000) // wait 90s
 }
 
-const GAS_PRICE = 160000000000 // 160 Gwei
+const GAS_PRICE = 200000000000 // 200 Gwei
 const TX_CONFIRMATIONS = 3 // for mainnet
 
 const ETHERSCAN_BASE_URL = 'https://polygonscan.com/'
