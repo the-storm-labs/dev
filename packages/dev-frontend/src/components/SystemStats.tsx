@@ -97,7 +97,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.TVL}>
         {total.collateral.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;ETH</Text>
         <Text sx={{ fontSize: 1 }}>
-          &nbsp;(${Decimal.from(total.collateral.mul(price)).shorten()})
+          &nbsp;(R${Decimal.from(total.collateral.mul(price)).shorten()})
         </Text>
       </Statistic>
       <Statistic lexicon={l.TROVES}>{Decimal.from(numberOfTroves).prettify(0)}</Statistic>
@@ -120,7 +120,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       </Heading>
       {kickbackRatePct && <Statistic lexicon={l.KICKBACK_RATE}>{kickbackRatePct}%</Statistic>}
 
-      <Box sx={{ mt: 3, opacity: 0.66 }}>
+      {/* <Box sx={{ mt: 3, opacity: 0.66 }}>
         <Box sx={{ fontSize: 0 }}>
           Contracts version: <GitHubCommit>{contractsVersion}</GitHubCommit>
         </Box>
@@ -133,7 +133,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
             <GitHubCommit>{import.meta.env.VITE_APP_VERSION}</GitHubCommit>
           )}
         </Box>
-      </Box>
+      </Box> */}
     </Card>
   );
 };
