@@ -16,9 +16,9 @@ export const TVL: Lexicon = {
     "The Total Value Locked (TVL) is the total value of Ether locked as collateral in the system, given in ETH and USD."
 };
 
-export const STAKED_LQTY: Lexicon = {
-  term: "Staked LQTY",
-  description: "The total amount of LQTY that is staked for earning fee revenue."
+export const STAKED_IBK: Lexicon = {
+  term: "Staked IBK",
+  description: "The total amount of IBK that is staked for earning fee revenue."
 };
 
 export const TCR: Lexicon = {
@@ -42,7 +42,7 @@ export const STABILITY_POOL_LUSD: Lexicon = {
 export const KICKBACK_RATE: Lexicon = {
   term: "Kickback Rate",
   description:
-    "A rate between 0 and 100% set by the Frontend Operator that determines the fraction of LQTY that will be paid out as a kickback to the Stability Providers using the frontend."
+    "A rate between 0 and 100% set by the Frontend Operator that determines the fraction of IBK that will be paid out as a kickback to the Stability Providers using the frontend."
 };
 
 export const ETH: Lexicon = {
@@ -53,8 +53,8 @@ export const IBRL: Lexicon = {
   term: "IBRL"
 };
 
-export const LQTY: Lexicon = {
-  term: "LQTY"
+export const IBK: Lexicon = {
+  term: "IBK"
 };
 
 export const TROVES: Lexicon = {

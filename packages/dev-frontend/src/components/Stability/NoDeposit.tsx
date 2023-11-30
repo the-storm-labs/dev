@@ -22,7 +22,7 @@ export const NoDeposit: React.FC = () => {
       </Heading>
       <Box sx={{ p: [2, 3] }}>
         <InfoMessage title="You have no IBRL in the Stability Pool.">
-          You can earn ETH and LQTY rewards by depositing IBRL.
+          You can earn ETH and IBK rewards by depositing IBRL.
         </InfoMessage>
 
         <Flex variant="layout.actions">

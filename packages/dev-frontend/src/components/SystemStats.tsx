@@ -22,7 +22,7 @@ const Balances: React.FC = () => {
       <Heading>My Account Balances</Heading>
       <Statistic lexicon={l.ETH}>{accountBalance.prettify(4)}</Statistic>
       <Statistic lexicon={l.IBRL}>{lusdBalance.prettify()}</Statistic>
-      <Statistic lexicon={l.LQTY}>{lqtyBalance.prettify()}</Statistic>
+      <Statistic lexicon={l.IBK}>{lqtyBalance.prettify()}</Statistic>
     </Box>
   );
 };
@@ -108,7 +108,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           <Text sx={{ fontSize: 1 }}>&nbsp;({lusdInStabilityPoolPct.toString(1)})</Text>
         </Statistic>
       )}
-      <Statistic lexicon={l.STAKED_LQTY}>{totalStakedLQTY.shorten()}</Statistic>
+      <Statistic lexicon={l.STAKED_IBK}>{totalStakedLQTY.shorten()}</Statistic>
       <Statistic lexicon={l.TCR}>{totalCollateralRatioPct.prettify()}</Statistic>
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}
