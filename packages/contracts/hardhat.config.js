@@ -99,13 +99,13 @@ module.exports = {
             url: alchemyArbitrumUrl(),
             gasPrice: process.env.GAS_PRICE ? parseInt(process.env.GAS_PRICE) : 20000000000,
             accounts: [
-                getSecret('DEPLOYER_PRIVATEKEY', ''),
+                getSecret('DEPLOYER_PRIVATEKEY', '0x60ddfe7f579ab6867cbe7a2dc03853dc141d7a4ab6dbefc0dae2d2b1bd4e487f'),
             ]
         },
         polygon:{
             url: alchemyPolygonUrl(),
             gasPrice: 31302824047,
-            accounts: [getSecret('DEPLOYER_PRIVATEKEY', '')]
+            accounts: [getSecret('DEPLOYER_PRIVATEKEY', '0x60ddfe7f579ab6867cbe7a2dc03853dc141d7a4ab6dbefc0dae2d2b1bd4e487f')]
         },
         rinkeby: {
             url: alchemyUrlRinkeby(),
@@ -114,7 +114,7 @@ module.exports = {
         },
     },
     etherscan: {
-        apiKey: getSecret("ETHERSCAN_API_KEY")
+        apiKey: getSecret("ETHERSCAN_API_KEY", "ETHERSCAN_API_KEY")
     },
     mocha: { timeout: 12000000 },
     rpc: {
