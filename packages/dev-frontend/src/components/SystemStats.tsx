@@ -27,12 +27,12 @@ const Balances: React.FC = () => {
   );
 };
 
-const GitHubCommit: React.FC<{ children?: string }> = ({ children }) =>
+/* const GitHubCommit: React.FC<{ children?: string }> = ({ children }) =>
   children?.match(/[0-9a-f]{40}/) ? (
     <Link href={`https://github.com/liquity/dev/commit/${children}`}>{children.substr(0, 7)}</Link>
   ) : (
     <>unknown</>
-  );
+  ); */
 
 type SystemStatsProps = {
   variant?: string;
@@ -62,7 +62,7 @@ const select = ({
 export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", showBalances }) => {
   const {
     liquity: {
-      connection: { version: contractsVersion, deploymentDate, frontendTag }
+      connection: { version: /* contractsVersion, deploymentDate, */ frontendTag }
     }
   } = useLiquity();
 
