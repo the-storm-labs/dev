@@ -1,26 +1,29 @@
 import { Theme, ThemeUIStyleObject } from "theme-ui";
 
 const baseColors = {
-  blue: "#007eec",
+  blue100: "#2E2472",
+  blue300: "#0B0437",
   purple: "#745ddf",
   cyan: "#2eb6ea",
   green: "#28c081",
   yellow: "##ece400",
   red: "#dc2c10",
   lightRed: "#ff755f",
-  orange: "#EC6E00"
+  orange100: "#F6BD8B",
+  orange300: "#FF7701"
 };
 
 const colors = {
-  primary: baseColors.orange,
-  secondary: baseColors.blue,
+  primary100: baseColors.blue100,
+  primary300: baseColors.blue300,
+  secondary: baseColors.orange300,
   accent: baseColors.yellow,
 
   success: baseColors.green,
   warning: baseColors.yellow,
   danger: baseColors.red,
   dangerHover: baseColors.lightRed,
-  info: baseColors.orange,
+  info: baseColors.orange100,
   invalid: "pink",
 
   text: "#293147",
@@ -33,7 +36,7 @@ const buttonBase: ThemeUIStyleObject = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-
+  background: colors.primary300,
   ":enabled": { cursor: "pointer" }
 };
 
@@ -143,7 +146,8 @@ const modalOverlay: ThemeUIStyleObject = {
 };
 
 const headerGradient: ThemeUIStyleObject = {
-  background: `linear-gradient(90deg, ${colors.background}, ${colors.muted})`
+  background: colors.primary300,
+  color: 'white'
 };
 
 const theme: Theme = {
@@ -209,7 +213,7 @@ const theme: Theme = {
 
     outline: {
       ...button,
-      ...buttonOutline("primary", "secondary")
+      ...buttonOutline("primary100", "secondary")
     },
 
     cancel: {

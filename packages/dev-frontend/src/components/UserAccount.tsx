@@ -29,6 +29,7 @@ export const UserAccount: React.FC = () => {
         {connectKit => (
           <Button
             variant="outline"
+            color={'white'}
             sx={{ alignItems: "center", p: 2, mr: 3 }}
             onClick={connectKit.show}
           >

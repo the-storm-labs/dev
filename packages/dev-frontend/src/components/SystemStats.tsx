@@ -113,12 +113,15 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}
       </Statistic>
-      {}
+      { }
 
-      <Heading as="h2" sx={{ mt: 3, fontWeight: "body" }}>
-        Frontend
-      </Heading>
-      {kickbackRatePct && <Statistic lexicon={l.KICKBACK_RATE}>{kickbackRatePct}%</Statistic>}
+      {kickbackRatePct &&
+        <>
+          <Heading as="h2" sx={{ mt: 3, fontWeight: "body" }}>
+            Frontend
+          </Heading>
+          <Statistic lexicon={l.KICKBACK_RATE}>{kickbackRatePct}%</Statistic>
+        </>}
 
       {/* <Box sx={{ mt: 3, opacity: 0.66 }}>
         <Box sx={{ fontSize: 0 }}>
