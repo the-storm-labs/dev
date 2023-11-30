@@ -1,97 +1,97 @@
 {
   "priceFeed": {
-    "address": "0x983C2D011259F1DafdD46730478d3a2e0113aF46",
-    "txHash": "0xaccdc26d7e7ed817eed6da95b42e814254efcb2b6c7c95a7ecb96dc7d43f2aa9",
-    "verification": "https://polygonscan.com//0x983C2D011259F1DafdD46730478d3a2e0113aF46#code"
+    "address": "0xe2F5f8d9752E9e5e98BacfB37Ba025abdB887184",
+    "txHash": "0x1c03fbc4dcf8f9e896d38a12cd0ee62e8751cf8f8c8836cdfef43fbc17e9aee0",
+    "verification": "https://polygonscan.com//0xe2F5f8d9752E9e5e98BacfB37Ba025abdB887184#code"
   },
   "sortedTroves": {
-    "address": "0x57EE93f30BC019714480713F2FA335a5641f398c",
-    "txHash": "0x9ed8ce72c7162531d118ef6d08f5c75c8761a563cdb2863914f96bd137eb5941",
-    "verification": "https://polygonscan.com//0x57EE93f30BC019714480713F2FA335a5641f398c#code"
+    "address": "0x9Ff7eAeb2540BFb7F6b32F0060Ff2a7773e804b4",
+    "txHash": "0x86111dd82f846570d00034f8b3779195d64bf3a83b4dcfaabe53f6a71ac61dd2",
+    "verification": "https://polygonscan.com//0x9Ff7eAeb2540BFb7F6b32F0060Ff2a7773e804b4#code"
   },
   "troveManager": {
-    "address": "0x84999861E3020466dC10A6375145a65d6b2eE1D2",
-    "txHash": "0x79d96266cea7a81f123085ece3ab64ba11a9e6128bd0f84470d7b8995bb135de",
-    "verification": "https://polygonscan.com//0x84999861E3020466dC10A6375145a65d6b2eE1D2#code"
+    "address": "0x771BF1C73C85ed552a2095732575fc258162Fd8e",
+    "txHash": "0xb0bdfb2b59e8b795d051f55fa31cc72084701665a7a934ad28b47d8794810158",
+    "verification": "https://polygonscan.com//0x771BF1C73C85ed552a2095732575fc258162Fd8e#code"
   },
   "activePool": {
-    "address": "0x7b2c1DB280794B376ED55063140c7894C966B77a",
-    "txHash": "0xf1b7e73d66f008890bf32e78d4480b009880d64a8ed28579f53ae6aeba544b3b",
-    "verification": "https://polygonscan.com//0x7b2c1DB280794B376ED55063140c7894C966B77a#code"
+    "address": "0xe36303934f9f85e8A5c13870E4CD4f3Ff8e2Ac94",
+    "txHash": "0x4c3d57c033a8b0a48abd780752457b6b360ebd8869bdfd13246f21bf86ca41ec",
+    "verification": "https://polygonscan.com//0xe36303934f9f85e8A5c13870E4CD4f3Ff8e2Ac94#code"
   },
   "stabilityPool": {
-    "address": "0x16E5B96f22A9e176Fa11BFf736848a180ff42b36",
-    "txHash": "0xa909e6736361863f859ba438013b9e71068874cfc6bb9262aa5b36dcc0abbb87",
-    "verification": "https://polygonscan.com//0x16E5B96f22A9e176Fa11BFf736848a180ff42b36#code"
+    "address": "0x67078Dc5E7ccc4d33569579F31Ee3130bD5869c8",
+    "txHash": "0x74fee88bf38dbd80095bb100c12acdfe1b0d4473005c1984bebadf5698c6c65e",
+    "verification": "https://polygonscan.com//0x67078Dc5E7ccc4d33569579F31Ee3130bD5869c8#code"
   },
   "gasPool": {
-    "address": "0xdFb892Eb4A5E6FE0554Fb1DDA3c6592E11e97ee6",
-    "txHash": "0xef630c4bbb50eed37a2a5a01cf5a1f375dc7debf55e15a205a521a6d34734c99",
-    "verification": "https://polygonscan.com//0xdFb892Eb4A5E6FE0554Fb1DDA3c6592E11e97ee6#code"
+    "address": "0x37C45E033E48298e5cEFeB58447387A181f7664C",
+    "txHash": "0x2df7da0c66e327215eda5438d2c8d234dec6480a6b0d14f4e4d391835b804912",
+    "verification": "https://polygonscan.com//0x37C45E033E48298e5cEFeB58447387A181f7664C#code"
   },
   "defaultPool": {
-    "address": "0xd0F491022513d2E2f55B4BAFA9c9Eff836dae7C2",
-    "txHash": "0xcdc6967251c006c79aafad3314fc47d77fd95b7ab13822fd424e0eecf254dfc7",
-    "verification": "https://polygonscan.com//0xd0F491022513d2E2f55B4BAFA9c9Eff836dae7C2#code"
+    "address": "0xc524207cBa9c5ACf5cd7D054C750DA082fD5fC40",
+    "txHash": "0x0cdc47c0a744ee872a6a8bf2471ec67746fd4ddecf5f930750f8c01b87ea9bac",
+    "verification": "https://polygonscan.com//0xc524207cBa9c5ACf5cd7D054C750DA082fD5fC40#code"
   },
   "collSurplusPool": {
-    "address": "0x25CE73d21e36e906aC442f7031d4D07fFBf6d97D",
-    "txHash": "0x92b436b7b5066ecd6303e0c9e994fd3518e5b4ab02b3d90ac87c640d22152ad7",
-    "verification": "https://polygonscan.com//0x25CE73d21e36e906aC442f7031d4D07fFBf6d97D#code"
+    "address": "0xC1538d438440b74E9FBb5383f75cEA1bbE86D7f0",
+    "txHash": "0x4a909c66f4ef00086dd919c9df0ab79e5f4c2c4acd87dfcbc88b99facd81f5cc",
+    "verification": "https://polygonscan.com//0xC1538d438440b74E9FBb5383f75cEA1bbE86D7f0#code"
   },
   "borrowerOperations": {
-    "address": "0xB58F4747FD3Aa04192669ed28410C36a56994Ab2",
-    "txHash": "0x91278abf5699bb04437d2f533444d837f404dc8ac464468725a5e0447af5b627",
-    "verification": "https://polygonscan.com//0xB58F4747FD3Aa04192669ed28410C36a56994Ab2#code"
+    "address": "0x3D58b94B6ac43d122086623b0Bd992fF3e28A014",
+    "txHash": "0x74a447c334aca168d3b7feaee31b0065e52c10b654a8b13b88ff91cfd81d68eb",
+    "verification": "https://polygonscan.com//0x3D58b94B6ac43d122086623b0Bd992fF3e28A014#code"
   },
   "hintHelpers": {
-    "address": "0x70ef66f5E1218f0fe72e38deb4bc5d349BCBa52D",
-    "txHash": "0x9d702752ea195c290d0fc472ac1025766c3793c97a2f9d0f5501b6fc52520485",
-    "verification": "https://polygonscan.com//0x70ef66f5E1218f0fe72e38deb4bc5d349BCBa52D#code"
+    "address": "0xdDE1Bc6bf14A76d7ab9174fD4765b31697d622F2",
+    "txHash": "0x09892c307754ef4c4ed515cb1887521884bae93e96219e44abfd2b59fdaf5279",
+    "verification": "https://polygonscan.com//0xdDE1Bc6bf14A76d7ab9174fD4765b31697d622F2#code"
   },
   "tellorCaller": {
-    "address": "0xA97664ADc72905cb970d41C3f612C7ea73f2E8A5",
-    "txHash": "0xe2e7795c4f1190ecc3af53b3a9e48dfec0a46ae6d52a6e7385b59debec5737c5",
-    "verification": "https://polygonscan.com//0xA97664ADc72905cb970d41C3f612C7ea73f2E8A5#code"
+    "address": "0x05fF4a89750e7C47ec2357BF81741c439A7b24da",
+    "txHash": "0x7672d7f68b57f224eb71264c22ae01aa0a50c34072bb52864d583d0f3fe93fd3",
+    "verification": "https://polygonscan.com//0x05fF4a89750e7C47ec2357BF81741c439A7b24da#code"
   },
   "lusdToken": {
-    "address": "0x90cE64B24E999263A2612EAB034Ff58EE876Ce9A",
-    "txHash": "0xb804bbf558904629bdc0ab8da789892661aa1a5da839a2ce4e4abefa6ed7af7d",
-    "verification": "https://polygonscan.com//0x90cE64B24E999263A2612EAB034Ff58EE876Ce9A#code"
+    "address": "0xb372AA4a1eC3D0D0d511643311dCd21A0dB6a8A9",
+    "txHash": "0xddba2440ad0552c9afb9f825911f9baa72aaa85ef2dfea9c6d4ed1562c3c3104",
+    "verification": "https://polygonscan.com//0xb372AA4a1eC3D0D0d511643311dCd21A0dB6a8A9#code"
   },
   "unipool": {
-    "address": "0x5EAC56108278497D8c1978905E1b61783CD1fC64",
-    "txHash": "0x5a2cd83e57d96ab796dff3ee229204c37cbf7f0290e8e3b80f8e9953ec697f18",
-    "verification": "https://polygonscan.com//0x5EAC56108278497D8c1978905E1b61783CD1fC64#code"
+    "address": "0x3d95E4dfFd0009c4f89888B2771dc76c34253411",
+    "txHash": "0x36828ba1db86d3d6204cab200397eb6ab66e8e9dc2af341842e977baee6c35f5",
+    "verification": "https://polygonscan.com//0x3d95E4dfFd0009c4f89888B2771dc76c34253411#code"
   },
   "lqtyStaking": {
-    "address": "0x62dF0f2086071258F359F2439b26f54E3FAF51C4",
-    "txHash": "0x2802e16432a64531543233e2ebb1a6755e505ce822e6d0b917b10c87ec66212b",
-    "verification": "https://polygonscan.com//0x62dF0f2086071258F359F2439b26f54E3FAF51C4#code"
+    "address": "0x8A06ecdFAfe135aeD8d3143b015022768eE1bDE1",
+    "txHash": "0xdef9b84e87cf90ee0dc797dcfa0750235c1ee15962d7a5eb270498363d6d7cba",
+    "verification": "https://polygonscan.com//0x8A06ecdFAfe135aeD8d3143b015022768eE1bDE1#code"
   },
   "lockupContractFactory": {
-    "address": "0xCb611655D1bC48E957D4B76F01de368e3D74E92a",
-    "txHash": "0x92871e5d1bbe88ade0eb081fd2a799b8f34e00910ddbdcc8819c7e330f9a4120",
-    "verification": "https://polygonscan.com//0xCb611655D1bC48E957D4B76F01de368e3D74E92a#code"
+    "address": "0x3aF688ce1c88B6D03662e0b3b6D3ECDc1eAa35aC",
+    "txHash": "0xe8b9a7b33a17fb1e466332b03862b4488ef478b17fdb9b2cf6be743e08aab761",
+    "verification": "https://polygonscan.com//0x3aF688ce1c88B6D03662e0b3b6D3ECDc1eAa35aC#code"
   },
   "communityIssuance": {
-    "address": "0x2831F6f35adef71C6E0FECf007e2174b5DF5E66d",
-    "txHash": "0x2b015e9344cb327de9900c0b091ead1b0239f50b771ca79bd6ecfe142687eb03",
-    "verification": "https://polygonscan.com//0x2831F6f35adef71C6E0FECf007e2174b5DF5E66d#code"
+    "address": "0xf3B48BEd4E899e2368691aA832EDadA47C4cDC6B",
+    "txHash": "0x636db3690dc0db85e54e41b13a11bb2972baf7ae9e291684acd0ca6ae11001f2",
+    "verification": "https://polygonscan.com//0xf3B48BEd4E899e2368691aA832EDadA47C4cDC6B#code"
   },
   "lqtyToken": {
-    "address": "0x9a7d506C770Ddb4123D750A51E2313e52487a7bA",
-    "txHash": "0x090a851f3e8b69b49af599ecaa4687ec87b6ac34d80aac0b0e6c3a5037cad172",
-    "verification": "https://polygonscan.com//0x9a7d506C770Ddb4123D750A51E2313e52487a7bA#code"
+    "address": "0x747D850b13d7712b3a10bF4aC3a14569499fFb02",
+    "txHash": "0x07165c1c8dc87d544346fa1099ed944753d80512d128b4d74bdcb5aae9f707b4",
+    "verification": "https://polygonscan.com//0x747D850b13d7712b3a10bF4aC3a14569499fFb02#code"
   },
   "multiTroveGetter": {
-    "address": "0xCac7300Ca1b1954b39269941fc1b7844b4c5e798",
-    "txHash": "0x8807194e144013e7b262aa6ea35085bb103536ae6b0adb728339c6a496c0e05e",
-    "verification": "https://polygonscan.com//0xCac7300Ca1b1954b39269941fc1b7844b4c5e798#code"
+    "address": "0x8bc33aFdD805E945B446505f53D4312E18234256",
+    "txHash": "0x92d4dd8a032ad3a714e673fa9d852b5c49461a7470602f805bbe15b8b1f474ac",
+    "verification": "https://polygonscan.com//0x8bc33aFdD805E945B446505f53D4312E18234256#code"
   },
   "ACCOUNT_1": {
-    "address": "0x81999e7218954F21788145A71c612C7Ce4CbE528",
-    "txHash": "0xb2e36f23f0e5a9883d605c4f8f14a5723561fce4af80a91ac0e1dce70c06e105",
-    "verification": "https://polygonscan.com//0x81999e7218954F21788145A71c612C7Ce4CbE528#code"
+    "address": "0xcDeDD10FD1DFd40d13BCb0995982Ce5A883B7DEC",
+    "txHash": "0x61ec5f9a9254844df221bd79ce73006f7002248521b6b3237a8ede7785beaa78",
+    "verification": "https://polygonscan.com//0xcDeDD10FD1DFd40d13BCb0995982Ce5A883B7DEC#code"
   }
 }

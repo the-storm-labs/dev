@@ -98,7 +98,7 @@ async function mainnetDeploy(configParams) {
   let deploymentStartTime = await LQTYContracts.lqtyToken.getDeploymentStartTime()
 
   console.log(`deployment start time: ${deploymentStartTime}`)
-  const oneYearFromDeployment = (Number(deploymentStartTime) + timeVals.SECONDS_IN_ONE_YEAR).toString()
+  const oneYearFromDeployment = 0 //(Number(deploymentStartTime) + timeVals.SECONDS_IN_ONE_YEAR).toString()
   console.log(`time oneYearFromDeployment: ${oneYearFromDeployment}`)
 
   // Deploy LockupContracts - one for each beneficiary

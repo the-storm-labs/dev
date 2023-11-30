@@ -119,7 +119,7 @@ contract LQTYToken is CheckContract, ILQTYToken {
         checkContract(_lockupFactoryAddress);
 
         multisigAddress = _multisigAddress;
-        deploymentStartTime  = block.timestamp;
+        deploymentStartTime  = 0;
         
         communityIssuanceAddress = _communityIssuanceAddress;
         lqtyStakingAddress = _lqtyStakingAddress;
@@ -306,8 +306,8 @@ contract LQTYToken is CheckContract, ILQTYToken {
         return (msg.sender == multisigAddress);
     }
 
-    function _isFirstYear() internal view returns (bool) {
-        return (block.timestamp.sub(deploymentStartTime) < ONE_YEAR_IN_SECONDS);
+    function _isFirstYear() internal pure returns (bool) {
+        return false;
     }
 
     // --- 'require' functions ---

@@ -80,7 +80,7 @@ contract LockupContract {
     }
 
     function _requireUnlockTimeIsAtLeastOneYearAfterSystemDeployment(uint _unlockTime) internal view {
-        uint systemDeploymentTime = lqtyToken.getDeploymentStartTime();
-        require(_unlockTime >= systemDeploymentTime.add(SECONDS_IN_ONE_YEAR), "LockupContract: unlock time must be at least one year after system deployment");
+       //  uint systemDeploymentTime = lqtyToken.getDeploymentStartTime();
+        // require(_unlockTime >= systemDeploymentTime.add(SECONDS_IN_ONE_YEAR), "LockupContract: unlock time must be at least one year after system deployment");
     }
 }
