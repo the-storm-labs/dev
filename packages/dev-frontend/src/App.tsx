@@ -96,6 +96,7 @@ const App = () => {
                   ? [goerli]
                   : [polygon],
               walletConnectProjectId: config.value.walletConnectProjectId,
+              alchemyId: 'ZcSrccXjBiuvpcKEyGH4Cnq8t02aQkZQ'
             })
           )}
         >
