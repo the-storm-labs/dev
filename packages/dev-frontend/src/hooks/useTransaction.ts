@@ -1,11 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
-import { TransactionStatus } from "../components/Bonds/context/transitions";
 
 export function useTransaction<T extends unknown[]>(
   transactionFunction: (...params: T) => Promise<void>,
   dependencies: unknown[]
-): [(...params: T) => Promise<void>, TransactionStatus] {
-  const [status, setStatus] = useState<TransactionStatus>("IDLE");
+): [(...params: T) => Promise<void>, any] {
+  const [status, setStatus] = useState<any>("IDLE");
 
   useEffect(() => {
     if (status === "CONFIRMED" || status === "FAILED") {
